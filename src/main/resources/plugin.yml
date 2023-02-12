@@ -1,0 +1,11 @@
+name: Minigame
+version: '${project.version}'
+main: com.xpkitty.minigame.Minigame
+api-version: 1.17
+authors: [ XpKitty ]
+description: a minigame plugin
+commands:
+  arena:
+    description: Used to join and leave arenas
+  lobby:
+    description: Teleport to lobby
