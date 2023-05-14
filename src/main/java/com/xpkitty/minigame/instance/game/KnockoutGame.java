@@ -4,7 +4,7 @@ import com.xpkitty.minigame.GameState;
 import com.xpkitty.minigame.Minigame;
 import com.xpkitty.minigame.instance.Arena;
 import com.xpkitty.minigame.instance.Game;
-import com.xpkitty.minigame.instance.PlayerDataSave;
+import com.xpkitty.minigame.instance.data.PlayerDataSave;
 import com.xpkitty.minigame.listener.ConnectListener;
 import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -58,11 +58,10 @@ public class KnockoutGame extends Game {
 
         player.sendMessage(ChatColor.GOLD + "+" + coinsForWin + " coins");
 
-        minigame.getApi().giveHousePoints(player,5,true);
 
         PlayerDataSave dataSave = connectListener.getPlayerData(player);
         if(dataSave != null) {
-            dataSave.addPoints(player, "coins" ,"SHOVELSPLEEF", coinsForWin);
+            dataSave.addPoints(player ,"SHOVELSPLEEF", coinsForWin);
             System.out.println("added " + coinsForWin + " SPLEEF coins to " + player.getDisplayName());
         } else {
             System.out.println("data save is null!");
@@ -105,6 +104,11 @@ public class KnockoutGame extends Game {
         knockback.setItemMeta(knockbackMeta);
 
         arena.giveItem(knockback);
+    }
+
+    @Override
+    public boolean isTeamGame() {
+        return false;
     }
 
     @EventHandler

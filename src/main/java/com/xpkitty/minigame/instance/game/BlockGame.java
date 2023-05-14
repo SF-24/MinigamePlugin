@@ -46,6 +46,11 @@ public class BlockGame extends Game {
         }
     }
 
+    @Override
+    public boolean isTeamGame() {
+        return false;
+    }
+
     @EventHandler
     public void onBlockBreak(BlockBreakEvent e){
 

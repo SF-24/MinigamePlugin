@@ -3,6 +3,7 @@ package com.xpkitty.minigame.command;
 import com.xpkitty.minigame.GameState;
 import com.xpkitty.minigame.Minigame;
 import com.xpkitty.minigame.instance.Arena;
+import com.xpkitty.minigame.instance.team.TeamUI;
 import com.xpkitty.minigame.kit.KitUI;
 import com.xpkitty.minigame.shop.ShopUI;
 import org.bukkit.ChatColor;
@@ -75,6 +76,17 @@ public class ArenaCommand implements CommandExecutor {
                 } else {
                     player.sendMessage(ChatColor.RED + "You are not in an arena");
                 }
+            } else if(args.length==1 && args[0].equalsIgnoreCase("team")) {
+                Arena arena = minigame.getArenaManager().getArena(player);
+                if(arena != null) {
+                    if(arena.isTeamGame()) {
+                        new TeamUI(player, minigame, arena.getGameType());
+                    } else {
+                        player.sendMessage(ChatColor.RED + "Game does not allow team selection");
+                    }
+                } else {
+                    player.sendMessage(ChatColor.RED+ "You are not in an arena");
+                }
             } else if(args.length == 1 && args[0].equalsIgnoreCase("leave")) {
                 Arena arena = minigame.getArenaManager().getArena(player);
                 if(arena != null) {
@@ -100,12 +112,15 @@ public class ArenaCommand implements CommandExecutor {
                 if(id >= 0 && id < minigame.getArenaManager().getArenas().size()) {
                     Arena arena = minigame.getArenaManager().getArena(id);
                     if(arena.getState() == GameState.RECRUITING || arena.getState() == GameState.COUNTDOWN) {
-                        if(arena.canJoin()) {
-                            // TODO: Check for max players:
 
+                        // if player can join and player count is less than maximum player count
+                        if(arena.canJoin() && arena.getPlayers().size()<arena.getMaxPlayers()) {
+
+                            // add player to arena
                             player.sendMessage(ChatColor.GREEN + "You are now playing in arena " + id);
                             arena.addPlayer(player);
                             player.setFireTicks(0);
+
                         } else {
                             player.sendMessage(ChatColor.RED + "You cannot join the arena right now. Map is still loading.");
                             System.out.println(player + " tried to join unavailable arena: " + id);
@@ -129,6 +144,7 @@ public class ArenaCommand implements CommandExecutor {
                 player.sendMessage(ChatColor.RED + "- /arena leave");
                 player.sendMessage(ChatColor.RED + "- /arena join <id>");
                 player.sendMessage(ChatColor.RED + "- /arena kit");
+                player.sendMessage(ChatColor.RED + "- /arena team");
                 player.sendMessage(ChatColor.RED + "- /arena shop");
                 player.sendMessage(ChatColor.RED + "- /lobby");
             }

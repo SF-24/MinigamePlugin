@@ -18,7 +18,6 @@ public class GameListener implements Listener {
     public void onWorldLoad(WorldLoadEvent e){
 
         if(minigame.getArenaManager() != null && minigame.getArenaManager().getArena(e.getWorld()) != null) {
-
             System.out.println(e.getWorld() + " has been loaded");
             Arena arena = minigame.getArenaManager().getArena(e.getWorld());
             if (arena != null && arena.getReset()) {

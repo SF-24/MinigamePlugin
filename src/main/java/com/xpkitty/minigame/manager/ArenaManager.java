@@ -2,10 +2,12 @@ package com.xpkitty.minigame.manager;
 
 import com.xpkitty.minigame.instance.Arena;
 import com.xpkitty.minigame.Minigame;
+import com.xpkitty.minigame.instance.game.bedwars.BedLocation;
 import com.xpkitty.minigame.listener.ConnectListener;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
@@ -38,43 +40,79 @@ public class ArenaManager {
         return Arrays.asList(array);
     }
 
+
+    //initialize arenas
     public ArenaManager(Minigame minigame, ConnectListener connectListener) {
         this.connectListener = connectListener;
         FileConfiguration config = minigame.getConfig();
         for (String str : config.getConfigurationSection("arenas.").getKeys(false)){
-            //World world = Bukkit.createWorld(new WorldCreator(config.getString("arenas." + str + ".world")));
+            System.out.println("arenas." + str);
 
-            /*if(config.getBoolean("arenas." + str + ".reset")) {
-                //world.setAutoSave(false);
-            } else {
-                world.setAutoSave(true);
-            }*/
+            if (Bukkit.getWorld(config.getString("arenas." + str + ".world")) != null) {
+                HashMap<String, Location> spawns = new HashMap<>();
+                HashMap<String, BedLocation> beds = new HashMap<>();
 
+                if(config.contains("arenas."+str+".beds")) {
+                    for(String element : config.getConfigurationSection("arenas."+str+".beds.").getKeys(false)) {
+                        String v = str+".beds."+element;
+                        System.out.println("spawn v " + v);
 
+                        BedLocation bed = new BedLocation(
+                                Bukkit.getWorld(config.getString("arenas." + str + ".world")),
+                                config.getDouble("arenas." + v + ".x"),
+                                config.getDouble("arenas." + v + ".y"),
+                                config.getDouble("arenas." + v + ".z"),
+                                BlockFace.valueOf(config.getString("arenas." + v + ".facing").toUpperCase(Locale.ROOT)));
+                        beds.put(element.toLowerCase(Locale.ROOT),bed);
+                    }
+                }
 
-            arenas.add(new Arena(minigame, Integer.parseInt(str), new Location(
-                    Bukkit.getWorld(config.getString("arenas." + str + ".world")),
-                    config.getDouble("arenas." + str + ".x"),
-                    config.getDouble("arenas." + str + ".y"),
-                    config.getDouble("arenas." + str + ".z"),
-                    (float) config.getDouble("arenas." + str + ".yaw"),
-                    (float) config.getDouble("arenas." + str + ".pitch")),
-                    config.getString("arenas." + str + ".game"),
-                    config.getBoolean("arenas." + str + ".reset"),
-                    connectListener,
-                    new Location(
+                for(String element : config.getConfigurationSection("arenas."+str+".spawns.").getKeys(false)) {
+                    String v = str+".spawns."+element;
+                    System.out.println("spawn v " + v);
+
+                    Location spawn = new Location(
                             Bukkit.getWorld(config.getString("arenas." + str + ".world")),
-                            config.getDouble("arenas." + str + ".respawn.x"),
-                            config.getDouble("arenas." + str + ".respawn.y"),
-                            config.getDouble("arenas." + str + ".respawn.z"),
-                            (float) config.getDouble("arenas." + str + ".respawn.yaw"),
-                            (float) config.getDouble("arenas." + str + ".respawn.pitch"))));
-            System.out.println();
-            System.out.println("Arena " + str + " initialised!");
-            System.out.println();
+                            config.getDouble("arenas." + v + ".x"),
+                            config.getDouble("arenas." + v + ".y"),
+                            config.getDouble("arenas." + v + ".z"),
+                            (float) config.getDouble("arenas." + v + ".yaw"),
+                            (float) config.getDouble("arenas." + v + ".pitch"));
+                    spawns.put(element.toLowerCase(Locale.ROOT),spawn);
+                }
 
+
+                Location respawn = new Location(
+                        Bukkit.getWorld(config.getString("arenas." + str + ".world")),
+                        config.getDouble("arenas." + str + ".respawn.x"),
+                        config.getDouble("arenas." + str + ".respawn.y"),
+                        config.getDouble("arenas." + str + ".respawn.z"),
+                        (float) config.getDouble("arenas." + str + ".respawn.yaw"),
+                        (float) config.getDouble("arenas." + str + ".respawn.pitch"));
+
+                arenas.add(new Arena(minigame, Integer.parseInt(str), spawns, beds,
+                        config.getString("arenas." + str + ".game"),
+                        config.getBoolean("arenas." + str + ".reset"),
+                        connectListener,
+                        respawn));
+
+                System.out.println();
+                System.out.println("Arena " + str + " initialised!");
+                System.out.println("Spawn loc. " + spawns);
+                System.out.println("Respawn loc. " + respawn);
+                System.out.println();
+
+            } else {
+                System.out.println("");
+                System.out.println("");
+                System.out.println("ERROR! SPAWN WORLD OF " + config.getString("arenas." + str + ".world") + " I NULL!");
+                System.out.println("");
+                System.out.println("");
+            }
         }
     }
+
+
 
     public List<Arena> getArenas() { return arenas; }
 

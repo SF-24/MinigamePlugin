@@ -1,9 +1,8 @@
 package com.xpkitty.minigame.listener;
 
 import com.xpkitty.minigame.Minigame;
-import com.xpkitty.minigame.command.ArenaCommand;
 import com.xpkitty.minigame.instance.Arena;
-import com.xpkitty.minigame.instance.PlayerDataSave;
+import com.xpkitty.minigame.instance.data.PlayerDataSave;
 import com.xpkitty.minigame.manager.ConfigManager;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -12,10 +11,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.UUID;
 
 public class ConnectListener implements Listener {
@@ -51,7 +48,7 @@ public class ConnectListener implements Listener {
             dataSaveList.put(player.getUniqueId(), instance);
             System.out.println("adding key to HashMap");
         }
-        instance.addPoints(player, "coins", "PVP", 0);
+        instance.addPoints(player, "PVP", 0);
     }
 
     @EventHandler

@@ -1,8 +1,6 @@
 package com.xpkitty.minigame.shop;
 
 import com.xpkitty.minigame.Minigame;
-import com.xpkitty.minigame.instance.PlayerDataSave;
-import com.xpkitty.minigame.kit.KitType;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -12,7 +10,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Arrays;
-import java.util.Locale;
 
 public class ShopUI {
     Minigame minigame;

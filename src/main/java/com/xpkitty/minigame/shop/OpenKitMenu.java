@@ -1,21 +1,18 @@
 package com.xpkitty.minigame.shop;
 
 import com.xpkitty.minigame.Minigame;
-import com.xpkitty.minigame.instance.PlayerDataSave;
+import com.xpkitty.minigame.instance.data.PlayerDataSave;
 import com.xpkitty.minigame.kit.KitType;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.util.io.BukkitObjectInputStream;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Locale;
 
 public class OpenKitMenu {

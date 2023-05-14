@@ -4,11 +4,9 @@ import com.xpkitty.minigame.GameState;
 import com.xpkitty.minigame.Minigame;
 import com.xpkitty.minigame.instance.Arena;
 import com.xpkitty.minigame.instance.Game;
-import com.xpkitty.minigame.instance.PlayerDataSave;
+import com.xpkitty.minigame.instance.data.PlayerDataSave;
 import com.xpkitty.minigame.listener.ConnectListener;
 import com.xpkitty.minigame.manager.ArenaManager;
-import com.xpkitty.minigame.manager.ConfigManager;
-import com.xpkitty.rpgplugin.manager.hogwarts.HogwartsHouseManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameRule;
@@ -55,12 +53,9 @@ public class PVPGame extends Game {
         if(playerKills.containsKey(player.getUniqueId())) {
             PlayerDataSave dataSave = new PlayerDataSave(player, minigame);
             player.sendMessage(ChatColor.GOLD + "+" + coinsPerKill + " coins"); //error - winner is NULL
-            dataSave.addPoints(player, "coins" ,"PVP", coinsPerKill);
+            dataSave.addPoints(player,"PVP", coinsPerKill);
             System.out.println("added " + coinsPerKill + " PVP coins to " + player.getDisplayName());
 
-            if(minigame.getApi().isInHouse(player)) {
-                minigame.getApi().giveHousePoints(player,1,true);
-            }
 
 
             int kills = playerKills.get(player.getUniqueId());
@@ -85,9 +80,8 @@ public class PVPGame extends Game {
 
         winner.sendMessage(ChatColor.GOLD + "+" + coinsForWin + " coins");
 
-        minigame.getApi().giveHousePoints(player,5,true);
 
-        dataSave.addPoints(winner, "coins" ,"PVP", coinsForWin);
+        dataSave.addPoints(winner ,"PVP", coinsForWin);
         System.out.println("added " + coinsForWin + " PVP coins to " + winner.getDisplayName());
 
         winner.sendTitle(ChatColor.GREEN + "VICTORY","",10,100,10);
@@ -103,12 +97,6 @@ public class PVPGame extends Game {
 
         for(UUID uuid : playerKills.keySet()) {
             String name = Bukkit.getPlayer(uuid).getName();
-
-            Player pl = Bukkit.getPlayer(uuid);
-
-            if(minigame.getApi().isInHouse(player)) {
-                name = HogwartsHouseManager.getHogwartsHouse(minigame.getApi(),pl).getPrefix()+name;
-            }
 
             playerKillsByName.put(name, playerKills.get(uuid));
             playerKillsLength++;
@@ -153,6 +141,11 @@ public class PVPGame extends Game {
         for(UUID uuid: arena.getKits().keySet()) {
             arena.getKits().get(uuid).onStart(Bukkit.getPlayer(uuid));
         }
+    }
+
+    @Override
+    public boolean isTeamGame() {
+        return false;
     }
 
     @EventHandler
@@ -263,6 +256,12 @@ public class PVPGame extends Game {
 
     @EventHandler
     public void onRespawn(PlayerRespawnEvent e) {
+        Player player = e.getPlayer();
+
+        if(arena.getPlayers().contains(player.getUniqueId())) {
+            player.teleport(arena.getRespawn());
+        }
+
         if(playerKills.size() == 1) {
             if(lastdead.getName().equals(e.getPlayer().getName())) {
                 giveWin(winner);

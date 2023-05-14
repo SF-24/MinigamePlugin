@@ -4,7 +4,7 @@ import com.xpkitty.minigame.GameState;
 import com.xpkitty.minigame.Minigame;
 import com.xpkitty.minigame.instance.Arena;
 import com.xpkitty.minigame.instance.Game;
-import com.xpkitty.minigame.instance.PlayerDataSave;
+import com.xpkitty.minigame.instance.data.PlayerDataSave;
 import com.xpkitty.minigame.listener.ConnectListener;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -87,10 +87,9 @@ public class ShovelSpleef extends Game {
 
 
         player.sendMessage(ChatColor.GOLD + "+" + coinsForWin + " coins");
-        minigame.getApi().giveHousePoints(player,5,true);
         PlayerDataSave dataSave = connectListener.getPlayerData(player);
         if(dataSave != null) {
-            dataSave.addPoints(player, "coins" ,"SHOVELSPLEEF", coinsForWin);
+            dataSave.addPoints(player,"SHOVELSPLEEF", coinsForWin);
             System.out.println("added " + coinsForWin + " SPLEEF coins to " + player.getDisplayName());
         } else {
             System.out.println("data save is null!");
@@ -164,6 +163,11 @@ public class ShovelSpleef extends Game {
         }
     }
 
+    @Override
+    public boolean isTeamGame() {
+        return false;
+    }
+
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent e) {
@@ -209,9 +213,11 @@ public class ShovelSpleef extends Game {
                 giveWin(winner);
             }
         }
-        Bukkit.getScheduler().runTaskLater(minigame, () -> {
-            e.getPlayer().teleport(arena.getRespawn());
-        }, 20);
+        if(arena.getPlayers().contains(e.getPlayer().getUniqueId())) {
+            Bukkit.getScheduler().runTaskLater(minigame, () -> {
+                e.getPlayer().teleport(arena.getRespawn());
+            }, 20);
+        }
     }
 
     @EventHandler

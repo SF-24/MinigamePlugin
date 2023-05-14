@@ -2,23 +2,19 @@ package com.xpkitty.minigame.listener;
 
 import com.xpkitty.minigame.Minigame;
 import com.xpkitty.minigame.instance.Arena;
-import com.xpkitty.minigame.instance.PlayerDataSave;
+import com.xpkitty.minigame.instance.data.PlayerDataSave;
+import com.xpkitty.minigame.instance.team.Team;
 import com.xpkitty.minigame.kit.KitType;
 import com.xpkitty.minigame.shop.OpenKitMenu;
 import com.xpkitty.minigame.shop.OpenShopCategory;
 import com.xpkitty.minigame.shop.ShopCategories;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.yaml.snakeyaml.Yaml;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.Locale;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 public class UIListener implements Listener {
     Minigame minigame;
@@ -49,6 +45,30 @@ public class UIListener implements Listener {
             }
 
 
+        } else if(e.getView().getTitle().equalsIgnoreCase(ChatColor.translateAlternateColorCodes('&',ChatColor.BLUE + "Team selection"))) {
+            e.setCancelled(true);
+            ItemStack item = e.getCurrentItem();
+            ItemMeta itemMeta = item.getItemMeta();
+
+            if(itemMeta!=null) {
+                for(Team team : Team.values()) {
+                    if(itemMeta.getDisplayName().contains(team.getName())) {
+                        if(minigame.getArenaManager().getArena(player)!=null) {
+                            Arena arena = minigame.getArenaManager().getArena(player);
+                            if(!arena.isTeamFull(team,player,false)) {
+                                arena.setTeam(player,team);
+                                player.sendMessage("You are now in " + team.getColorCode() + team.getName() + " team");
+                                player.closeInventory();
+                            } else {
+                                player.sendMessage(ChatColor.RED+ "Team " + team.getName() + " is full");
+                            }
+                        }
+                    }
+                }
+            }
+
+
+
         } else if(e.getView().getTitle().contains("Minigame shop") && e.getInventory() != null && e.getCurrentItem() != null) {
 
             e.setCancelled(true);
@@ -71,20 +91,11 @@ public class UIListener implements Listener {
                     if(!playerDataSave.getKitOwnershipStatus(kitName,player)) {
                         if(playerDataSave.getCoins(player, kitType.getGame()) >= kitType.getPrice()) {
 
-                            YamlConfiguration yamlConfiguration = playerDataSave.getModifyLocation(player);
-                            File file = playerDataSave.getFile(player);
-
-                            String kitNameYaml = kitType.name().toLowerCase(Locale.ROOT);
-                            yamlConfiguration.set("kits." + kitNameYaml, true);
+                            playerDataSave.playerJsonDataSave.giveKit(player,kitType);
                             player.sendMessage(ChatColor.GREEN + "Kit purchased: " + kitType.getDisplay());
-                            playerDataSave.addPoints(player,"coins",kitType.getGame(),-100);
+                            playerDataSave.addPoints(player,kitType.getGame(),-kitType.getPrice());
                             new OpenKitMenu(player,minigame,kitType.getGame());
 
-                            try {
-                                yamlConfiguration.save(file);
-                            } catch (IOException ex) {
-                                ex.printStackTrace();
-                            }
 
                         } else {
                             player.sendMessage(ChatColor.RED + "You do not have enough coins");

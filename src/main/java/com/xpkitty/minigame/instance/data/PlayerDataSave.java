@@ -1,36 +1,21 @@
-package com.xpkitty.minigame.instance;
+package com.xpkitty.minigame.instance.data;
 
 import com.xpkitty.minigame.Minigame;
-import com.xpkitty.minigame.kit.KitType;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.UUID;
 
 public class PlayerDataSave {
 
-    private final Minigame minigame;
-    private final Player player;
-
-    public HashMap<UUID, File> fileMap = new HashMap<>();
-    public HashMap<UUID, YamlConfiguration> modifyFileMap = new HashMap<>();
+    public PlayerJsonDataSave playerJsonDataSave;
 
     public PlayerDataSave(Player player, Minigame minigame) {
-        this.player = player;
-        this.minigame = minigame;
-
-        try {
-            initiateFile(player.getUniqueId() + ".yml", minigame);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        playerJsonDataSave = new PlayerJsonDataSave(player,minigame);
     }
 
-    private void initiateFile(String name, Minigame minigame) throws Exception {
+    /*private void initiateFile(String name, Minigame minigame) throws Exception {
 
         String path = "plugins" + File.separator + "Minigame" + File.separator + "PlayerData";
         System.out.println("PATH: " + path);
@@ -88,67 +73,18 @@ public class PlayerDataSave {
         fileMap.put(player.getUniqueId(), file);
         modifyFileMap.put(player.getUniqueId(), modifyFile);
         modifyFile.save(file);
-    }
+    }*/
 
     public int getCoins(Player player, String game) {
-        YamlConfiguration modifyFile = getModifyLocation(player);
-        game = game.toUpperCase(Locale.ROOT);
-
-        if(modifyFile.contains("coins."+game)) {
-            return modifyFile.getInt("coins." + game.toUpperCase(Locale.ROOT));
-        }
-        return 0;
+        return playerJsonDataSave.getCoins(player,game);
     }
 
-    public void addPoints(Player player, String dir, String type, int amount) {
-        File file = getFile(player);
-        YamlConfiguration modifyFile = getModifyLocation(player);
-
-        if(file != null && modifyFile != null) {
-            String directory = dir + "." + type;
-            if(!modifyFile.contains(dir)) {
-                modifyFile.createSection(dir);
-            }
-            if(!modifyFile.contains(directory)) {
-                modifyFile.createSection(directory);
-                modifyFile.set(directory, 0);
-            }
-            int points = modifyFile.getInt(directory);
-            modifyFile.set(directory, points + amount);
-            try {
-                modifyFile.save(file);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+    public void addPoints(Player player, String type, int amount) {
+        playerJsonDataSave.addCoins(player,type,amount);
     }
 
-    public YamlConfiguration getModifyLocation(Player player) {
-        if(modifyFileMap.containsKey(player.getUniqueId())) {
-            YamlConfiguration toReturn = modifyFileMap.get(player.getUniqueId());
-            return toReturn;
-        }
-        return null;
-    }
-
-    public File getFile(Player player) {
-        if(fileMap.containsKey(player.getUniqueId())) {
-            File toReturn = fileMap.get(player.getUniqueId());
-            return toReturn;
-        }
-        return null;
-    }
 
     public boolean getKitOwnershipStatus(String kitName, Player player) {
-
-
-        YamlConfiguration modifyFile = getModifyLocation(player);
-        kitName = kitName.toLowerCase(Locale.ROOT);
-
-
-        if(!modifyFile.contains("kits." + kitName)) {
-            return false;
-        }
-        return modifyFile.getBoolean("kits." + kitName);
+        return playerJsonDataSave.getKitOwnershipStatus(kitName,player);
     }
 }

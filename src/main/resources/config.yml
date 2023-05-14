@@ -2,47 +2,121 @@ welcome-message: 'Welcome to the server! :)'
 required-players: 2
 maximum-players: 8
 countdown-seconds: 30
-enable-rpg-compatibility: false
 lobby-spawn:
   world: 'world'
   x: 0.5
   y: 64.0
   z: 0.5
-  yaw: -180
+  yaw: 180
   pitch: 0
 arenas:
-  # AVAILABLE GAME OPTIONS:
-  #- BLOCK
-  #- PVP
-  #- SHOVELSPLEEF
-  #- KNOCKOUT
   0:
-    reset: true
-    game: 'BLOCK'
+    reset: false
+    game: 'PVP'
     world: 'Map0'
-    x: 100.5
-    y: 64.0
-    z: 100.5
-    yaw: 0
-    pitch: 0
+    spawns:
+      0:
+        x: 0.5
+        y: 64.0
+        z: 0.5
+        yaw: 0
+        pitch: 0
     respawn:
       x: 0
       y: 64
-      z: 20
+      z: 0
       yaw: 180
       pitch: 0
   1:
     reset: false
-    game: 'PVP'
+    game: 'SHOVELSPLEEF'
     world: 'Map1'
-    x: -100.5
-    y: 64.0
-    z: -100.5
-    yaw: 0
-    pitch: 0
+    spawns:
+      0:
+        x: 0.5
+        y: 64.0
+        z: 0.5
+        yaw: 0
+        pitch: 0
     respawn:
-      x: 0
+      x: -2
       y: 64
-      z: 20
+      z: 14
       yaw: 180
       pitch: 0
+  2:
+    reset: false
+    game: 'KNOCKOUT'
+    world: 'Map2'
+    spawns:
+      0:
+        x: 10.5
+        y: 64.0
+        z: 0.5
+        yaw: 0
+        pitch: 0
+    respawn:
+      x: 25
+      y: 70
+      z: 0
+      yaw: 180
+      pitch: 0
+  3:
+    reset: false
+    game: 'KNOCKOUT'
+    world: 'Map1'
+    spawns:
+      0:
+        x: -186.5
+        y: 62.00
+        z: -392.5
+        yaw: 90
+        pitch: 0
+    respawn:
+      x: -265
+      y: 70
+      z: -393
+      yaw: 180
+      pitch: 0
+  4:
+    reset: false
+    game: 'BEDWARS'
+    world: 'Map4'
+    x: -186.5
+    y: 62.00
+    z: -392.5
+    yaw: 90
+    pitch: 0
+    corners:
+      1:
+        x: 124
+        y: 85
+        z: 124
+      2:
+        x: -124
+        y: 145
+        z: -124
+    beds:
+      red:
+        x: 0
+        y: 100
+        z: 74
+        facing: south
+      blue:
+        x: 0
+        y: 100
+        z: -74
+        facing: north
+    spawns:
+      red:
+        x: 0
+        y: 100
+        z: 90.5
+        yaw: 180
+        pitch: 0
+      blue:
+        x: 0
+        y: 100
+        z: -90.5
+        yaw: 0
+        pitch: 0

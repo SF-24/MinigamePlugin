@@ -1,7 +1,7 @@
 package com.xpkitty.minigame.kit;
 
 import com.xpkitty.minigame.Minigame;
-import com.xpkitty.minigame.instance.PlayerDataSave;
+import com.xpkitty.minigame.instance.data.PlayerDataSave;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
