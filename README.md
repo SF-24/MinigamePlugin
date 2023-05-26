@@ -1,6 +1,7 @@
 # MinigamePlugin
 
 The minigame plugins goal is to create playable minigames in Minecraft
+Build with maven
 
 ## Installation
 
