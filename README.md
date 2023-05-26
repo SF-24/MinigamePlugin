@@ -5,7 +5,7 @@ Build with maven
 
 ## Installation
 
-Place in the ```plugins``` folder of your ```spigot``` (or any spigot fork) server.
+Place built .jar file in the ```plugins``` folder of your ```spigot``` (or any spigot fork) server.
 
 ## Usage
 Arena data is stored in config.
