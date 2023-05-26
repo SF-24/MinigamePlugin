@@ -66,7 +66,8 @@ setup: a floating ring over lava, a bit like in Sumo duels. Can be made of ice.\
 ```world``` The world in which the arena is located\
 ```spawns``` Possible spawn locations. Selected randomly.\
 ```respawn``` Respawn location. Player is teleported there after death\
-\
+
+
 #### WARNING!
 ```SHOVELSPLEEF``` may damage terrain around the arena, because before every game it places snow in a large rectangle. Coordinates cannot yet be changed.\
 I reccomend using only 1 spawn with ```shovelspleef```.\
