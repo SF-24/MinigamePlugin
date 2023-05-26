@@ -12,3 +12,7 @@ commands:
     description: Teleport to lobby
   shop:
     description: Admins only
+    permission: minigame.admin
+permissions:
+  minigame.admin:
+    default: op
