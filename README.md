@@ -162,7 +162,7 @@ There are 3 types: ```base```, ```diamond``` and ```emerald```\
 Currently this plugin does not yet spawn an npc. To create the item shop use a plugin like [```Citizens```](https://github.com/CitizensDev/Citizens2/) or [```zNpcs```](https://github.com/gonalez/znpcs) to create an npc. The item shop can be opened with the command: ```/shop bw```. This command can only be run by people with operator permissions in a BedWars arena\
 Attach the command to an npc and make it run as the player that clicked it.\
 
-## Usage
+## Usage and commands
 In game, use ```/arena``` to view arena command help.\
 ```/arena list``` show a list of available arenas\
 ```/arena join <id>``` can be used to join an arena\
