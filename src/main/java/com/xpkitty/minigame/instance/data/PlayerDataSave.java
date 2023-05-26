@@ -1,6 +1,9 @@
 package com.xpkitty.minigame.instance.data;
 
 import com.xpkitty.minigame.Minigame;
+import com.xpkitty.minigame.instance.GameType;
+import com.xpkitty.minigame.kit.KitType;
+import com.xpkitty.minigame.ui.shop.ShopCategories;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
@@ -75,16 +78,18 @@ public class PlayerDataSave {
         modifyFile.save(file);
     }*/
 
-    public int getCoins(Player player, String game) {
-        return playerJsonDataSave.getCoins(player,game);
+    public int getCoins(Player player, GameType game) {
+        return playerJsonDataSave.getCoins(player,game.name().toLowerCase(Locale.ROOT));
     }
 
-    public void addPoints(Player player, String type, int amount) {
-        playerJsonDataSave.addCoins(player,type,amount);
+    public void addPoints(Player player, GameType type, int amount) {
+        playerJsonDataSave.addCoins(player,type.name().toUpperCase(Locale.ROOT),amount);
     }
 
 
-    public boolean getKitOwnershipStatus(String kitName, Player player) {
-        return playerJsonDataSave.getKitOwnershipStatus(kitName,player);
+    public boolean getKitOwnershipStatus(KitType kitType, Player player) {
+        return playerJsonDataSave.getKitOwnershipStatus(kitType,player);
     }
+
+    public PlayerJsonDataSave getPlayerJsonDataSave() {return playerJsonDataSave;}
 }

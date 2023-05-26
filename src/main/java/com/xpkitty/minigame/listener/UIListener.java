@@ -5,14 +5,17 @@ import com.xpkitty.minigame.GameState;
 import com.xpkitty.minigame.Minigame;
 import com.xpkitty.minigame.instance.Arena;
 import com.xpkitty.minigame.instance.GameItemManager;
+import com.xpkitty.minigame.instance.GameType;
 import com.xpkitty.minigame.instance.Utility;
 import com.xpkitty.minigame.instance.data.PlayerDataSave;
 import com.xpkitty.minigame.instance.game.bedwars.Tool;
 import com.xpkitty.minigame.instance.team.Team;
 import com.xpkitty.minigame.kit.KitType;
+import com.xpkitty.minigame.ui.GameSelectorUI;
 import com.xpkitty.minigame.ui.bedwars.Shop;
 import com.xpkitty.minigame.ui.bedwars.elements.Item;
 import com.xpkitty.minigame.ui.bedwars.elements.ShopCategory;
+import com.xpkitty.minigame.ui.game_select.GameCategories;
 import com.xpkitty.minigame.ui.shop.OpenKitMenu;
 import com.xpkitty.minigame.ui.shop.OpenShopCategory;
 import com.xpkitty.minigame.ui.shop.ShopCategories;
@@ -106,7 +109,7 @@ public class UIListener implements Listener {
 
                     //TODO: KIT BUYING
 
-                    if(!playerDataSave.getKitOwnershipStatus(kitName,player)) {
+                    if(!playerDataSave.getKitOwnershipStatus(kitType,player)) {
                         if(playerDataSave.getCoins(player, kitType.getGame()) >= kitType.getPrice()) {
 
                             playerDataSave.playerJsonDataSave.giveKit(player,kitType);
@@ -217,6 +220,28 @@ public class UIListener implements Listener {
                     player.sendMessage(ChatColor.RED + "Not enough " + itemVal.getCurrency().name().toLowerCase(Locale.ROOT));
                 }
             }
+        } else if(e.getView().getTitle().contains("Game Selector")) {
+            e.setCancelled(true);
+            ItemStack clickedItem = e.getCurrentItem();
+            if(clickedItem!=null) {
+                if(clickedItem.getItemMeta()!=null){
+                    ItemMeta clickedItemMeta = clickedItem.getItemMeta();
+                    String locName = clickedItemMeta.getLocalizedName();
+
+                    if(locName.contains("category_")) {
+                        String name = locName.substring(9);
+                        GameSelectorUI.openGameSelectorUICategory(player,minigame, GameCategories.valueOf(name.toUpperCase(Locale.ROOT)));
+                    } else if(locName.contains("game_")) {
+                        String name = locName.substring(5);
+                        GameSelectorUI.openGameSelectorUIGame(player,minigame,GameType.valueOf(name.toUpperCase(Locale.ROOT)));
+                    } else if(locName.contains("arena_")) {
+                        String name = locName.substring(6);
+                        int arena = Integer.parseInt(name);
+
+                        minigame.getArenaManager().addPlayerToArena(player,arena);
+                    }
+                }
+            }
         }
 
         for(ShopCategories value : ShopCategories.values()) {
@@ -229,7 +254,7 @@ public class UIListener implements Listener {
                         default:
                             return;
                         case "kits":
-                            new OpenKitMenu((Player) e.getWhoClicked(), minigame, value.name());
+                            new OpenKitMenu((Player) e.getWhoClicked(), minigame, GameType.valueOf(value.name().toUpperCase(Locale.ROOT)));
                             break;
                     }
                 }

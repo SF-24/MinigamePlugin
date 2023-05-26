@@ -1,6 +1,7 @@
 package com.xpkitty.minigame.manager;
 
 import com.xpkitty.minigame.Minigame;
+import com.xpkitty.minigame.instance.GameType;
 import com.xpkitty.minigame.instance.game.bedwars.Generator;
 import com.xpkitty.minigame.instance.game.bedwars.GeneratorType;
 import org.bukkit.Bukkit;
@@ -18,6 +19,8 @@ public class ConfigManager {
         ConfigManager.config = minigame.getConfig();
         minigame.saveDefaultConfig();
     }
+
+    public static int getCurrentSeason() {return config.getInt("current-season");}
 
     public static int getRequiredPlayers() { return config.getInt("required-players"); }
 

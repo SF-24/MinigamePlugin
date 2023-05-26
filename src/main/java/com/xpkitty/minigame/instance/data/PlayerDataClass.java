@@ -1,19 +1,50 @@
 package com.xpkitty.minigame.instance.data;
 
+import com.xpkitty.minigame.instance.GameType;
 import com.xpkitty.minigame.kit.KitType;
+import com.xpkitty.minigame.manager.ConfigManager;
+import com.xpkitty.minigame.manager.statistics.PlayerStatistics;
 
 import java.util.HashMap;
 
 public class PlayerDataClass {
 
-    public PlayerDataClass(HashMap<CoinType, Integer> coins, HashMap<KitType, Boolean> kits) {
+    public PlayerDataClass(HashMap<CoinType, Integer> coins, HashMap<KitType, Boolean> kits, HashMap<Integer, PlayerStatistics> statistics) {
         this.coins=coins;
         this.kits=kits;
+        this.statistics=statistics;
     }
 
 
     HashMap<CoinType, Integer> coins;
     HashMap<KitType, Boolean> kits;
+    HashMap<Integer, PlayerStatistics> statistics;
+
+    public HashMap<Integer, PlayerStatistics> getStatistics() {
+        return statistics;
+    }
+
+    public PlayerStatistics getStatisticsForSeason(int season) {
+        return statistics.get(season);
+    }
+
+    public void updateStatisticHashMap() {
+        if(getStatistics()!=null) {
+            for (Integer i : statistics.keySet()) {
+                PlayerStatistics playerStatistics = statistics.get(i);
+                playerStatistics.updateStats();
+                statistics.put(i, playerStatistics);
+            }
+        }
+    }
+
+    public void updatePlayerStatistics(PlayerStatistics playerStatistics, int season) {
+        statistics.put(season,playerStatistics);
+    }
+
+    public void updateLatestPlayerStatistics(PlayerStatistics playerStatistics) {
+        updatePlayerStatistics(playerStatistics, ConfigManager.getCurrentSeason());
+    }
 
     private void checkContainsCoinType(CoinType coinType) {
         if(!coins.containsKey(coinType) && coinType!=null) {

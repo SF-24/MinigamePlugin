@@ -53,10 +53,8 @@ public class BlockGame extends Game {
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent e){
-
         if(arena.getPlayers().contains(e.getPlayer().getUniqueId()) && arena.getState() == GameState.LIVE) {
             addPoint(e.getPlayer());
         }
-
     }
 }

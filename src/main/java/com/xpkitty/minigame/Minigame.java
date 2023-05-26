@@ -9,6 +9,7 @@ import com.xpkitty.minigame.manager.ArenaManager;
 import com.xpkitty.minigame.manager.ConfigManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Minigame extends JavaPlugin{
@@ -29,6 +30,7 @@ public class Minigame extends JavaPlugin{
         Bukkit.getPluginManager().registerEvents(listener, this);
         Bukkit.getPluginManager().registerEvents(new ExplodeListener(this), this);
         Bukkit.getPluginManager().registerEvents(new ClickListener(), this);
+        Bukkit.getPluginManager().registerEvents(new PregameListener(this), this);
 
         getCommand("arena").setExecutor(new ArenaCommand(this));
         getCommand("lobby").setExecutor(new LobbyCommand(this));
@@ -40,6 +42,10 @@ public class Minigame extends JavaPlugin{
         for(Arena arena : arenaManager.getArenas()) {
             arena.sendTitle(ChatColor.RED + "GAME HAS ENDED", ChatColor.GOLD + "PLUGIN DISABLED");
         }
+    }
+
+    public static void sendCoinsMessage(Player player, int amount) {
+        player.sendMessage(ChatColor.GOLD + "+" + amount + " coins");
     }
 
     public ConfigManager getConfigManager() {return configManager; }

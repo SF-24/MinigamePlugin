@@ -4,8 +4,10 @@ import com.xpkitty.minigame.GameState;
 import com.xpkitty.minigame.Minigame;
 import com.xpkitty.minigame.instance.Arena;
 import com.xpkitty.minigame.instance.Game;
+import com.xpkitty.minigame.instance.GameType;
 import com.xpkitty.minigame.instance.data.PlayerDataSave;
 import com.xpkitty.minigame.listener.ConnectListener;
+import com.xpkitty.minigame.manager.statistics.StatisticType;
 import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
@@ -53,15 +55,13 @@ public class KnockoutGame extends Game {
             for(PotionEffect effect: Bukkit.getPlayer(uuid).getActivePotionEffects()) { Bukkit.getPlayer(uuid).removePotionEffect(effect.getType()); }
         }
         player.sendTitle(ChatColor.GREEN + "VICTORY","",10,100,10);
-
-
-
         player.sendMessage(ChatColor.GOLD + "+" + coinsForWin + " coins");
 
 
         PlayerDataSave dataSave = connectListener.getPlayerData(player);
         if(dataSave != null) {
-            dataSave.addPoints(player ,"SHOVELSPLEEF", coinsForWin);
+            dataSave.getPlayerJsonDataSave().addStatisticForLatestSeason(GameType.KNOCKOUT,player, StatisticType.WINS);
+            dataSave.addPoints(player , GameType.SHOVELSPLEEF, coinsForWin);
             System.out.println("added " + coinsForWin + " SPLEEF coins to " + player.getDisplayName());
         } else {
             System.out.println("data save is null!");
@@ -152,19 +152,15 @@ public class KnockoutGame extends Game {
 
     @EventHandler
     public void onRespawn(PlayerRespawnEvent e) {
-        if(alivePlayers.size() == 1) {
-            if (lastdead.getName().equals(e.getPlayer().getName())) {
-                giveWin(winner);
+        if(arena.getState().equals(GameState.LIVE)) {
+            if (alivePlayers.size() == 1) {
+                if (lastdead.getName().equals(e.getPlayer().getName())) {
+                    giveWin(winner);
+                }
             }
+            e.getPlayer().teleport(arena.getRandomSpawnLocation());
+            e.getPlayer().setGameMode(GameMode.SPECTATOR);
         }
     }
 
-    @EventHandler
-    public void onBlockBreak(BlockBreakEvent e) {
-        if(!(e.getBlock().getType() == Material.SNOW_BLOCK)) {
-            if(arena.getPlayers().contains(e.getPlayer())) {
-                e.setCancelled(true);
-            }
-        }
-    }
 }

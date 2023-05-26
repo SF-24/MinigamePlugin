@@ -21,7 +21,7 @@ import static org.bukkit.attribute.AttributeModifier.Operation.ADD_NUMBER;
 
 public class SpleefFerrariKit extends Kit {
     public SpleefFerrariKit(Minigame minigame, UUID uuid) {
-        super(minigame, KitType.KNIGHT, uuid);
+        super(minigame, KitType.SPLEEF_FERRARI, uuid);
     }
 
     @Override

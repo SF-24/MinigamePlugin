@@ -4,8 +4,10 @@ import com.xpkitty.minigame.GameState;
 import com.xpkitty.minigame.Minigame;
 import com.xpkitty.minigame.instance.Arena;
 import com.xpkitty.minigame.instance.Game;
+import com.xpkitty.minigame.instance.GameType;
 import com.xpkitty.minigame.instance.data.PlayerDataSave;
 import com.xpkitty.minigame.listener.ConnectListener;
+import com.xpkitty.minigame.manager.statistics.StatisticType;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -89,7 +91,8 @@ public class ShovelSpleef extends Game {
         player.sendMessage(ChatColor.GOLD + "+" + coinsForWin + " coins");
         PlayerDataSave dataSave = connectListener.getPlayerData(player);
         if(dataSave != null) {
-            dataSave.addPoints(player,"SHOVELSPLEEF", coinsForWin);
+            dataSave.addPoints(player, GameType.SHOVELSPLEEF, coinsForWin);
+            dataSave.getPlayerJsonDataSave().addStatisticForLatestSeason(GameType.SHOVELSPLEEF,player, StatisticType.WINS);
             System.out.println("added " + coinsForWin + " SPLEEF coins to " + player.getDisplayName());
         } else {
             System.out.println("data save is null!");
@@ -208,15 +211,14 @@ public class ShovelSpleef extends Game {
 
     @EventHandler
     public void onRespawn(PlayerRespawnEvent e) {
-        if(alivePlayers.size() == 1) {
-            if(lastdead.getName().equals(e.getPlayer().getName())) {
-                giveWin(winner);
+        if(arena.getState().equals(GameState.LIVE)) {
+            if (alivePlayers.size() == 1) {
+                if (lastdead.getName().equals(e.getPlayer().getName())) {
+                    giveWin(winner);
+                }
             }
-        }
-        if(arena.getPlayers().contains(e.getPlayer().getUniqueId())) {
-            Bukkit.getScheduler().runTaskLater(minigame, () -> {
-                e.getPlayer().teleport(arena.getRespawn());
-            }, 20);
+            e.getPlayer().teleport(arena.getRandomSpawnLocation());
+            e.getPlayer().setGameMode(GameMode.SPECTATOR);
         }
     }
 

@@ -2,6 +2,7 @@ package com.xpkitty.minigame.listener;
 
 import com.xpkitty.minigame.Minigame;
 import com.xpkitty.minigame.instance.Arena;
+import com.xpkitty.minigame.instance.GameType;
 import com.xpkitty.minigame.instance.data.PlayerDataSave;
 import com.xpkitty.minigame.manager.ConfigManager;
 import org.bukkit.ChatColor;
@@ -48,7 +49,7 @@ public class ConnectListener implements Listener {
             dataSaveList.put(player.getUniqueId(), instance);
             System.out.println("adding key to HashMap");
         }
-        instance.addPoints(player, "PVP", 0);
+        instance.addPoints(player, GameType.PVP, 0);
     }
 
     @EventHandler

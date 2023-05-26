@@ -3,8 +3,11 @@ package com.xpkitty.minigame.command;
 import com.xpkitty.minigame.GameState;
 import com.xpkitty.minigame.Minigame;
 import com.xpkitty.minigame.instance.Arena;
+import com.xpkitty.minigame.instance.GameType;
+import com.xpkitty.minigame.instance.game.PVPGame;
 import com.xpkitty.minigame.instance.team.TeamUI;
 import com.xpkitty.minigame.kit.KitUI;
+import com.xpkitty.minigame.ui.GameSelectorUI;
 import com.xpkitty.minigame.ui.MainUI;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -41,33 +44,30 @@ public class ArenaCommand implements CommandExecutor {
 
                     // may be errors, may require toString()
                     System.out.println("-" + arena.getId() + " (" + arena.getState().name() + ")");
-                    String gameType = arena.getGameType();
+                    GameType gameType = arena.getGameType();
+                    String gameName = gameType.getDisplayName();
                     String endln;
                     if(arena.getPlayers().size() != 1) {endln = "s.";} else {endln = ".";}
 
                     if(arena.getState() == GameState.RECRUITING){
-                        player.sendMessage(ChatColor.GREEN + "-" + arena.getId() + " " + gameType + " (" + arena.getState().name() + "), " + playercount + " player" + endln);
+                        player.sendMessage(ChatColor.GREEN + "-" + arena.getId() + " " + gameName + " (" + arena.getState().name() + "), " + playercount + " player" + endln);
                     } else if(arena.getState() == GameState.COUNTDOWN) {
-                        player.sendMessage(ChatColor.YELLOW + "-" + arena.getId() + " " + gameType + " (" + arena.getState().name() + "), " + playercount + " player" + endln);
+                        player.sendMessage(ChatColor.YELLOW + "-" + arena.getId() + " " + gameName + " (" + arena.getState().name() + "), " + playercount + " player" + endln);
                     } else if(arena.getState() == GameState.ENDED) {
-                        player.sendMessage(ChatColor.GOLD + "-" + arena.getId() + " " + gameType + " (" + arena.getState().name() + "), " + playercount + " player" + endln);
+                        player.sendMessage(ChatColor.GOLD + "-" + arena.getId() + " " + gameName + " (" + arena.getState().name() + "), " + playercount + " player" + endln);
                     } else {
-                        player.sendMessage(ChatColor.RED + "-" + arena.getId() + " " + gameType + " (" + arena.getState().name() + ")");
+                        player.sendMessage(ChatColor.RED + "-" + arena.getId() + " " + gameName + " (" + arena.getState().name() + ")");
                     }
 
                 }
             } else if(args.length == 1 && args[0].equalsIgnoreCase("kit")) {
                 Arena arena = minigame.getArenaManager().getArena(player);
                 if(arena != null) {
-                    if(arena.getGameType().equals("PVP")) {
+
+                    if(arena.getGameType().hasKits()) {
+
                         if(arena.getState() != GameState.LIVE && arena.getState() != GameState.ENDED) {
-                            new KitUI(player, minigame,"PVP");
-                        } else {
-                            player.sendMessage(ChatColor.RED + "You cannot select a kit at this time");
-                        }
-                    } else if(arena.getGameType().equals("SHOVELSPLEEF")) {
-                        if(arena.getState() != GameState.LIVE && arena.getState() != GameState.ENDED) {
-                            new KitUI(player, minigame,"SHOVELSPLEEF");
+                            new KitUI(player, minigame,arena.getGameType());
                         } else {
                             player.sendMessage(ChatColor.RED + "You cannot select a kit at this time");
                         }
@@ -138,6 +138,8 @@ public class ArenaCommand implements CommandExecutor {
                 } else {
                     player.sendMessage(ChatColor.RED + "You cannot run this command while playing in an arena");
                 }
+            } else if(args.length== 1 && args[0].equalsIgnoreCase("ui")) {
+                GameSelectorUI.openMainGameSelectorUI(player,minigame);
             } else {
                 player.sendMessage(ChatColor.RED + "Invalid usage! These are the options:");
                 player.sendMessage(ChatColor.RED + "- /arena list");
@@ -146,6 +148,7 @@ public class ArenaCommand implements CommandExecutor {
                 player.sendMessage(ChatColor.RED + "- /arena kit");
                 player.sendMessage(ChatColor.RED + "- /arena team");
                 player.sendMessage(ChatColor.RED + "- /arena shop");
+                player.sendMessage(ChatColor.RED + "- /arena ui");
                 player.sendMessage(ChatColor.RED + "- /lobby");
             }
         }

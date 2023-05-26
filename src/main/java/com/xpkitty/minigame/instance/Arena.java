@@ -15,13 +15,11 @@ import com.xpkitty.minigame.kit.type.*;
 import com.xpkitty.minigame.listener.ConnectListener;
 import com.xpkitty.minigame.manager.ConfigManager;
 import org.bukkit.*;
-import org.bukkit.block.data.type.TNT;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
-import org.bukkit.scheduler.BukkitTask;
 
 import java.util.*;
 
@@ -31,24 +29,24 @@ public class Arena {
 
     private final int id;
     private final HashMap<String,Location> spawns;
-    private HashMap<String, BedLocation> beds;
+    private final HashMap<String, BedLocation> beds;
     private final Location respawn;
-    private final String gameName;
+    private final GameType gameType;
     public boolean ifReset;
 
-    private HashMap<Team, Location> teamSpawns;
-    private HashMap<Team, BedLocation> teamBeds;
+    private final HashMap<Team, Location> teamSpawns;
+    private final HashMap<Team, BedLocation> teamBeds;
 
     private GameState state;
     private final List<UUID> players;
     private final HashMap<UUID, Kit> kits;
-    private HashMap<UUID, Team> teams;
+    private final HashMap<UUID, Team> teams;
     private Countdown countdown;
     private Game game;
     private boolean canJoin;
     private final ConnectListener connectListener;
 
-    public Arena(Minigame minigame, int id, HashMap<String,Location> spawns, HashMap<String, BedLocation> beds, String game, boolean ifReset, ConnectListener connectListener, Location respawn){
+    public Arena(Minigame minigame, int id, HashMap<String,Location> spawns, HashMap<String, BedLocation> beds, GameType game, boolean ifReset, ConnectListener connectListener, Location respawn){
         teamBeds = new HashMap<>();
         teamSpawns = new HashMap<>();
 
@@ -59,7 +57,7 @@ public class Arena {
         this.spawns = spawns;
         this.beds=beds;
         this.respawn = respawn;
-        this.gameName = game;
+        this.gameType = game;
         this.ifReset = ifReset;
 
         this.state = GameState.RECRUITING;
@@ -67,17 +65,6 @@ public class Arena {
         this.kits = new HashMap<>();
         this.teams = new HashMap<>();
         this.countdown = new Countdown(minigame, this);
-        /*switch (gameName) {
-            case "BLOCK":
-                this.game = new BlockGame(minigame, this);
-                break;
-            case "PVP":
-                this.game = new PVPGame(minigame, this);
-                break;
-            default:
-                System.out.println("MINIGAME " + game + " DOES NOT EXIST: ERROR!");
-                break;
-        }*/
 
         setupNewGame();
         this.canJoin = true;
@@ -86,20 +73,20 @@ public class Arena {
     /* GAME */
 
     private void setupNewGame() {
-        switch (gameName) {
-            case "BLOCK":
+        switch (gameType) {
+            case BLOCK_GAME:
                 this.game = new BlockGame(minigame, this, connectListener);
                 break;
-            case "PVP":
+            case PVP:
                 this.game = new PVPGame(minigame, this, connectListener);
                 break;
-            case "SHOVELSPLEEF":
+            case SHOVELSPLEEF:
                 this.game = new ShovelSpleef(minigame, this, connectListener);
                 break;
-            case "KNOCKOUT":
+            case KNOCKOUT:
                 this.game = new KnockoutGame(minigame, this, connectListener);
                 break;
-            case "BEDWARS":
+            case BEDWARS:
                 for(String name : beds.keySet()) {
                     teamBeds.put(Team.valueOf(name.toUpperCase(Locale.ROOT)), beds.get(name));
                 }
@@ -129,11 +116,17 @@ public class Arena {
 
             // heal players and clear effects
             for(UUID uuid : players) {
-                Bukkit.getPlayer(uuid).getInventory().clear();
-                Bukkit.getPlayer(uuid).getEnderChest().clear();
-                Bukkit.getPlayer(uuid).setHealth(20);
-                Bukkit.getPlayer(uuid).setFoodLevel(20);
-                for(PotionEffect effect: Bukkit.getPlayer(uuid).getActivePotionEffects()) { Bukkit.getPlayer(uuid).removePotionEffect(effect.getType()); }
+                Player player = Bukkit.getPlayer(uuid);
+                if(player!=null) {
+
+                    player.getInventory().clear();
+                    player.getEnderChest().clear();
+                    player.setHealth(20);
+                    player.setFoodLevel(20);
+                    for (PotionEffect effect : player.getActivePotionEffects()) {
+                        player.removePotionEffect(effect.getType());
+                    }
+                }
             }
 
             // wait if set
@@ -149,9 +142,11 @@ public class Arena {
             // reset player stuff
             for(UUID uuid : players) {
                 Player player = Bukkit.getPlayer(uuid);
-                player.teleport(loc);
-                removeKit(player.getUniqueId());
-                removeTeam(player.getUniqueId());
+                if (player != null) {
+                    player.teleport(loc);
+                    removeKit(player.getUniqueId());
+                    removeTeam(player.getUniqueId());
+                }
             }
             players.clear();
             kits.clear();
@@ -165,8 +160,8 @@ public class Arena {
             }*/
 
             // if game type is BedWars, reset arena
-            if(getGameType().equalsIgnoreCase("BEDWARS")) {
-                ArrayList<Location> corners = minigame.getConfigManager().getCorners(id);
+            if(getGameType().equals(GameType.BEDWARS)) {
+                ArrayList<Location> corners = ConfigManager.getCorners(id);
                 Location corner1 = corners.get(0);
                 Location corner2 = corners.get(1);
 
@@ -185,8 +180,8 @@ public class Arena {
                     blocksToRemove.add(team.getGlass());
                 }
 
-                int startY = 0;
-                int endY = 0;
+                int startY;
+                int endY;
                 if (corner1.getY() < corner2.getY()) {
                     startY = (int) corner1.getY();
                     endY = (int) corner2.getY();
@@ -195,8 +190,8 @@ public class Arena {
                     startY = (int) corner2.getY();
                 }
 
-                int startX = 0;
-                int endX = 0;
+                int startX;
+                int endX;
                 if (corner1.getY() < corner2.getX()) {
                     startX = (int) corner1.getX();
                     endX = (int) corner2.getX();
@@ -205,8 +200,8 @@ public class Arena {
                     startX = (int) corner2.getX();
                 }
 
-                int startZ = 0;
-                int endZ = 0;
+                int startZ;
+                int endZ;
                 if (corner1.getY() < corner2.getZ()) {
                     startZ = (int) corner1.getZ();
                     endZ = (int) corner2.getZ();
@@ -262,7 +257,7 @@ public class Arena {
 
     public void sendMessage(String message){
         for (UUID uuid: players) {
-            Bukkit.getPlayer(uuid).sendMessage(message);
+            Objects.requireNonNull(Bukkit.getPlayer(uuid)).sendMessage(message);
         }
     }
 
@@ -289,26 +284,28 @@ public class Arena {
     public void addPlayer(Player player) {
 
         //get random spawn from list
-        Location location = getRandomLocation();
+        Location location = getRandomSpawnLocation();
 
         if(location!=null) {
             players.add(player.getUniqueId());
             player.teleport(location);
-            if (getGameType().equals("PVP")) {
+            if (getGameType().equals(GameType.PVP)) {
                 player.sendMessage(ChatColor.GOLD + "Choose your kit with /arena kit");
                 setKit(player.getUniqueId(), KitType.PVP_DEFAULT);
-            } else if (getGameType().equals("SHOVELSPLEEF")) {
+            } else if (getGameType().equals(GameType.SHOVELSPLEEF)) {
                 player.sendMessage(ChatColor.GOLD + "Choose your kit with /arena kit");
                 setKit(player.getUniqueId(), KitType.SPLEEF_DEFAULT);
             }
-            if(getGameType().equals("BEDWARS")) {
+            if(getGameType().equals(GameType.BEDWARS)) {
                 player.sendMessage(ChatColor.GOLD + "Select team with /arena team");
             }
             player.getInventory().clear();
 
             int reqPlayers = ConfigManager.getRequiredPlayers();
-            if(reqPlayers<getTeamsList().size()) {
-                reqPlayers=getTeamsList().size();
+            if(getTeamsList()!=null) {
+                if (reqPlayers < getTeamsList().size()) {
+                    reqPlayers = getTeamsList().size();
+                }
             }
 
 
@@ -325,7 +322,7 @@ public class Arena {
                             countdown.setCountdownSeconds(30);
                         }
                     } else {
-                        if(!getGameType().equalsIgnoreCase("PVP") || getGameType().equals("SHOVELSPLEEF")) {
+                        if(!getGameType().hasKits()) {
                             if (plSize<=players.size()+1 && countdown.getCountdownSeconds()>30) {
                                 countdown.setCountdownSeconds(30);
                             }
@@ -344,7 +341,7 @@ public class Arena {
                             countdown.setCountdownSeconds(30);
                         }
                     } else {
-                        if(!getGameType().equalsIgnoreCase("PVP") || getGameType().equals("SHOVELSPLEEF")) {
+                        if(!getGameType().hasKits()) {
                             if (plSize<=players.size()+1 && countdown.getCountdownSeconds()>30) {
                                 countdown.setCountdownSeconds(30);
                             }
@@ -402,7 +399,7 @@ public class Arena {
     /* INFO */
 
     public int getId() { return id; }
-    public World getWorld() { return getRandomLocation().getWorld(); }
+    public World getWorld() { return getRandomSpawnLocation().getWorld(); }
 
     public GameState getState() { return state; }
     public List<UUID> getPlayers() { return players; }
@@ -415,10 +412,10 @@ public class Arena {
     public HashMap<UUID, Kit> getKits() { return kits; }
     public HashMap<UUID, Team> getTeams() {return teams;}
 
-    public String getGameType() { return gameName; }
+    public GameType getGameType() { return gameType; }
     public boolean getReset() { return ifReset; }
 
-    public Location getRandomLocation() {
+    public Location getRandomSpawnLocation() {
 
         ArrayList<Location> loc = new ArrayList<>(spawns.values());
 
@@ -438,9 +435,7 @@ public class Arena {
     }
 
     public void removeTeam(UUID uuid) {
-        if(teams.containsKey(uuid)) {
-            teams.remove(uuid);
-        }
+        teams.remove(uuid);
     }
 
     public void setTeam(Player player, Team team) {
@@ -575,10 +570,7 @@ public class Arena {
                 System.out.println("Player count: " + teamPlayerCount + "/" + teamDiv + " %% " + remainderDiv);
             }
         }
-        if(remainderDiv<=0) {
-            return true;
-        }
-        return false;
+        return remainderDiv <= 0;
     }
 
     public Location getTeamSpawn(Team team) {
@@ -589,15 +581,13 @@ public class Arena {
     }
 
     public HashMap<Team, BedLocation> getBeds() {
-            if (getGameType().equalsIgnoreCase("BedWars")) {
+            if (getGameType().equals(GameType.BEDWARS)) {
                 return teamBeds;
             }
             return null;
         }
 
     public boolean isTeamGame() {
-        GameType gameType = GameType.valueOf(getGameType().toUpperCase(Locale.ROOT));
-
         if (gameType != null) {
             return gameType.isTeamGame();
         }
@@ -606,5 +596,12 @@ public class Arena {
 
     public int getMaxPlayers() {
         return ConfigManager.getMaximumPlayers();
+    }
+
+    public int getRequiredPlayers() {
+        int requiredPlayers = ConfigManager.getRequiredPlayers();
+        if(requiredPlayers<teams.size()) requiredPlayers=teams.size();
+
+        return requiredPlayers;
     }
 }

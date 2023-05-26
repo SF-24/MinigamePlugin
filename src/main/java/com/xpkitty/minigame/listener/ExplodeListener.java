@@ -2,6 +2,7 @@ package com.xpkitty.minigame.listener;
 
 import com.xpkitty.minigame.Minigame;
 import com.xpkitty.minigame.instance.Arena;
+import com.xpkitty.minigame.instance.GameType;
 import com.xpkitty.minigame.instance.team.Team;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -29,7 +30,7 @@ public class ExplodeListener implements Listener {
     @EventHandler
     void ExplodeEvent(EntityExplodeEvent e) {
         for(Arena arena : minigame.getArenaManager().getArenas()) {
-            if(arena.getGameType().equalsIgnoreCase("bedwars")&& e.getLocation().getWorld().getName().equals(arena.getWorld().getName())) {
+            if(arena.getGameType().equals(GameType.BEDWARS)&& e.getLocation().getWorld().getName().equals(arena.getWorld().getName())) {
                 List<Block> blockList = e.blockList();
                 List<Material> explodeBlacklist = Arrays.asList(Material.POLISHED_ANDESITE, Material.SMOOTH_STONE_SLAB,Material.SANDSTONE,Material.SANDSTONE_STAIRS,Material.BLACK_WOOL,Material.GRAY_WOOL,Material.SPRUCE_PLANKS,Material.DIAMOND_BLOCK,Material.EMERALD_BLOCK,Material.COBBLESTONE);
                 ArrayList<Material> explodeBlacklistTeamColor = new ArrayList<>();

@@ -27,11 +27,11 @@ public class KnightKit extends Kit {
         sword.setItemMeta(swordMeta);
 
         player.getInventory().addItem(sword);
-        player.getInventory().addItem(new ItemStack(Material.SHIELD));
         player.getInventory().setHelmet(new ItemStack(Material.GOLDEN_HELMET));
         player.getInventory().setChestplate(new ItemStack(Material.GOLDEN_CHESTPLATE));
         player.getInventory().setLeggings(new ItemStack(Material.GOLDEN_LEGGINGS));
         player.getInventory().setBoots(new ItemStack(Material.GOLDEN_BOOTS));
         player.getInventory().addItem(new ItemStack(Material.COOKED_BEEF, 10));
+        player.getInventory().addItem(new ItemStack(Material.GOLDEN_APPLE));
     }
 }

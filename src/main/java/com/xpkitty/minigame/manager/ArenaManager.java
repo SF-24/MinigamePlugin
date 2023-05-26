@@ -2,9 +2,11 @@ package com.xpkitty.minigame.manager;
 
 import com.xpkitty.minigame.instance.Arena;
 import com.xpkitty.minigame.Minigame;
+import com.xpkitty.minigame.instance.GameType;
 import com.xpkitty.minigame.instance.game.bedwars.BedLocation;
 import com.xpkitty.minigame.listener.ConnectListener;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.BlockFace;
@@ -90,8 +92,11 @@ public class ArenaManager {
                         (float) config.getDouble("arenas." + str + ".respawn.yaw"),
                         (float) config.getDouble("arenas." + str + ".respawn.pitch"));
 
+                String gameName = config.getString("arenas." + str + ".game");
+                GameType gameType = GameType.valueOf(gameName.toUpperCase(Locale.ROOT));
+
                 arenas.add(new Arena(minigame, Integer.parseInt(str), spawns, beds,
-                        config.getString("arenas." + str + ".game"),
+                        gameType,
                         config.getBoolean("arenas." + str + ".reset"),
                         connectListener,
                         respawn));
@@ -148,6 +153,14 @@ public class ArenaManager {
         }
         System.out.println(worldName + " has no arenas.");
         return null;
+    }
+
+    public void addPlayerToArena(Player player, int arena) {
+        if(getArena(player)!=null) {
+            getArena(player).removePlayer(player);
+        }
+        getArena(arena).addPlayer(player);
+        player.sendMessage(ChatColor.GREEN + "Joining arena " + arena);
     }
 
 }

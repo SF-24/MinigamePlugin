@@ -1,6 +1,7 @@
 package com.xpkitty.minigame.ui.shop;
 
 import com.xpkitty.minigame.Minigame;
+import com.xpkitty.minigame.instance.GameType;
 import com.xpkitty.minigame.instance.data.PlayerDataSave;
 import com.xpkitty.minigame.kit.KitType;
 import org.bukkit.Bukkit;
@@ -19,15 +20,13 @@ public class OpenKitMenu {
 
     String priceLine = ChatColor.WHITE + "Price: " + ChatColor.GOLD;
 
-    public OpenKitMenu(Player player, Minigame minigame, String game) {
+    public OpenKitMenu(Player player, Minigame minigame, GameType game) {
 
         int kitCount = 0;
 
         for(KitType kitType : KitType.values()) {
-            if(kitType.name().equalsIgnoreCase(game.toUpperCase(Locale.ROOT))) {
-
+            if(kitType.getGame().equals(game)) {
                 kitCount++;
-
             }
         }
         int size = 9;
@@ -55,7 +54,7 @@ public class OpenKitMenu {
         Inventory ui = Bukkit.createInventory(null, size, ChatColor.BLACK + "Kits, " + ChatColor.DARK_RED + "You have " + coins + " coins");
 
         for(KitType kitType : KitType.values()) {
-            if(kitType.getGame().equalsIgnoreCase(game.toUpperCase(Locale.ROOT))) {
+            if(kitType.getGame().equals(game)) {
 
                 ItemStack kit = new ItemStack(kitType.getMaterial());
                 ItemMeta kitMeta = kit.getItemMeta();
@@ -64,7 +63,7 @@ public class OpenKitMenu {
                 kitMeta.addItemFlags(ItemFlag.HIDE_DYE);
                 kitMeta.setDisplayName(kitType.getDisplay());
 
-                boolean ownsKit = playerDataSave.getKitOwnershipStatus(kitType.name(), player);
+                boolean ownsKit = playerDataSave.getKitOwnershipStatus(kitType, player);
 
                 String ownedLine = "";
 

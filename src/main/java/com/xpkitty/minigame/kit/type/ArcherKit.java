@@ -13,7 +13,7 @@ import java.util.UUID;
 
 public class ArcherKit extends Kit {
     public ArcherKit(Minigame minigame, UUID uuid) {
-        super(minigame, KitType.ARMORER, uuid);
+        super(minigame, KitType.ARCHER, uuid);
     }
 
     @Override

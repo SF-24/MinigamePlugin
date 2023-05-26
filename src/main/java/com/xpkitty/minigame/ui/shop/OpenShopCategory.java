@@ -1,6 +1,7 @@
 package com.xpkitty.minigame.ui.shop;
 
 import com.xpkitty.minigame.Minigame;
+import com.xpkitty.minigame.instance.GameType;
 import com.xpkitty.minigame.instance.data.PlayerDataSave;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -12,6 +13,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Locale;
 
 public class OpenShopCategory {
 
@@ -29,7 +31,7 @@ public class OpenShopCategory {
 
         ItemStack moneyStack = new ItemStack(moneyAmountIcon);
         ItemMeta moneyStackMeta = moneyStack.getItemMeta();
-        moneyStackMeta.setDisplayName(moneyIconName + playerDataSave.getCoins(player,category.name()));
+        moneyStackMeta.setDisplayName(moneyIconName + playerDataSave.getCoins(player, GameType.valueOf(category.name().toUpperCase(Locale.ROOT))));
         moneyStack.setItemMeta(moneyStackMeta);
         ui.addItem(moneyStack);
 

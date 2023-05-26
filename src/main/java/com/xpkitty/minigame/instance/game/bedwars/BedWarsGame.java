@@ -2,18 +2,19 @@ package com.xpkitty.minigame.instance.game.bedwars;
 
 import com.xpkitty.minigame.GameState;
 import com.xpkitty.minigame.Minigame;
-import com.xpkitty.minigame.instance.Arena;
-import com.xpkitty.minigame.instance.GameItemManager;
-import com.xpkitty.minigame.instance.Game;
-import com.xpkitty.minigame.instance.KillReason;
+import com.xpkitty.minigame.instance.*;
+import com.xpkitty.minigame.instance.data.PlayerJsonDataSave;
 import com.xpkitty.minigame.instance.team.Team;
 import com.xpkitty.minigame.listener.ConnectListener;
+import com.xpkitty.minigame.manager.ArenaManager;
 import com.xpkitty.minigame.manager.ConfigManager;
+import com.xpkitty.minigame.manager.statistics.StatisticType;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.type.Bed;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -34,6 +35,7 @@ public class BedWarsGame extends Game {
     private ArrayList<Team> bedsAlive;
     private List<UUID> tempDeadPlayers;
     private List<Team> aliveTeams;
+    private HashMap<UUID, Integer> playerKills;
     private HashMap<UUID, Integer> armorLevel;
 
     int worldYStart = 0;
@@ -45,6 +47,7 @@ public class BedWarsGame extends Game {
         aliveTeams=new ArrayList<>();
         tempDeadPlayers = new ArrayList<>();
         armorLevel=new HashMap<>();
+        playerKills=new HashMap<>();
     }
 
 
@@ -220,18 +223,48 @@ public class BedWarsGame extends Game {
 
     void killPlayer(Player player, KillReason killReason, String killerNameString) {
         if(arena.getState().equals(GameState.LIVE)) {
+
+            // setup variables
             boolean finalKill = false;
             String playerNameString = arena.getPlayerTeam(player).getColorCode() + player.getDisplayName() + " ";
             String finalKillString = "";
+
+            //check if is final kill
             if (!bedsAlive.contains(arena.getPlayerTeam(player))) {
                 finalKill = true;
                 finalKillString = ChatColor.AQUA.toString() + ChatColor.BOLD + " FINAL KILL";
             }
 
+            // check kill reasons
             if (killReason.equals(KillReason.VOID_FALL)) {
                 arena.sendMessage(playerNameString + ChatColor.GRAY + "fell into the void." + finalKillString);
+
+            // if is player kill
             } else if (killReason.equals(KillReason.PLAYER_KILL)) {
+                // coins given for each player kill
+                int coinsForKill=5;
+
+                // kill msg
                 arena.sendMessage(playerNameString + ChatColor.GRAY + "was killed by " + arena.getPlayerTeam(Bukkit.getPlayer(killerNameString)).getColorCode() + killerNameString + ChatColor.GRAY + "." + finalKillString);
+
+
+                // give coins and kill stat
+                Player killer = Bukkit.getPlayer(killerNameString);
+                PlayerJsonDataSave playerJsonDataSave = new PlayerJsonDataSave(killer,minigame);
+
+                // if final kill, set coins to 10 and add statistic
+                if(finalKill) {
+                    coinsForKill=10;
+                    playerJsonDataSave.addStatisticForLatestSeason(GameType.BEDWARS,killer,StatisticType.FINAL_KILLS);
+                }
+
+                playerJsonDataSave.addStatisticForLatestSeason(GameType.BEDWARS,killer, StatisticType.KILLS);
+                playerJsonDataSave.addCoins(killer,GameType.BEDWARS.name(), coinsForKill);
+
+                // send coins msg
+                Minigame.sendCoinsMessage(player,coinsForKill);
+
+            // more kill reasons
             } else if (killReason.equals(KillReason.ENTITY_KILL)) {
                 arena.sendMessage(playerNameString + ChatColor.GRAY + "was killed by " + killerNameString + ChatColor.GRAY + "." + finalKillString);
             } else if (killReason.equals(KillReason.GENERIC_REASON)) {
@@ -242,7 +275,7 @@ public class BedWarsGame extends Game {
                 arena.sendMessage(playerNameString + ChatColor.GRAY + "rejoined." + finalKillString);
             }
 
-
+            // give items if is player kill
             if (killReason.equals(KillReason.PLAYER_KILL)) {
                 for (ItemStack stack : player.getInventory().getContents()) {
                     List<Material> giveOnDeath = Arrays.asList(Material.IRON_INGOT, Material.GOLD_INGOT, Material.DIAMOND, Material.EMERALD);
@@ -254,6 +287,7 @@ public class BedWarsGame extends Game {
 
             List<ItemStack> itemsToGive = new ArrayList<>();
 
+            // check inv items
             if(player.getInventory().contains(Material.SHEARS)) {itemsToGive.add(GameItemManager.getUnbreakableItem(Material.SHEARS));}
             if(player.getInventory().contains(Material.DIAMOND_PICKAXE)) {itemsToGive.add(GameItemManager.getUnbreakableItem(Material.GOLDEN_PICKAXE));}
             if(player.getInventory().contains(Material.GOLDEN_PICKAXE)) {itemsToGive.add(GameItemManager.getUnbreakableItem(Material.IRON_PICKAXE));}
@@ -264,7 +298,7 @@ public class BedWarsGame extends Game {
             if(player.getInventory().contains(Material.IRON_AXE)) {itemsToGive.add(GameItemManager.getUnbreakableItem(Material.STONE_AXE));}
             if(player.getInventory().contains(Material.WOODEN_AXE)) {itemsToGive.add(GameItemManager.getUnbreakableItem(Material.WOODEN_AXE));}
 
-
+            // clear inv
             player.getInventory().clear();
             player.setFallDistance(0f);
 
@@ -275,6 +309,7 @@ public class BedWarsGame extends Game {
             player.setFoodLevel(20);
             player.teleport(arena.getTeamSpawn(arena.getPlayerTeam(player)));
 
+            // if is not final kill
             if (!finalKill) {
                 // if is not final kill, respawn player
                 PlayerRespawnTask task = new PlayerRespawnTask(minigame, this, player, 5, itemsToGive);
@@ -301,6 +336,7 @@ public class BedWarsGame extends Game {
                 testForWin();
             }
         } else {
+            // else tp player to team spawn
             player.teleport(arena.getTeamSpawn(arena.getPlayerTeam(player)));
         }
     }
@@ -316,12 +352,18 @@ public class BedWarsGame extends Game {
     public void giveWin(Team team) {
         System.out.println("[BEDWARS] game end");
 
+        showTopKills();
+
         // send victory message
         for(UUID uuid : arena.getPlayersOfTeam(team,false)) {
             Player player = Bukkit.getPlayer(uuid);
 
             if(player!=null) {
                 player.sendTitle(ChatColor.GOLD.toString() + ChatColor.BOLD + "VICTORY!","");
+                PlayerJsonDataSave playerJsonDataSave = new PlayerJsonDataSave(player,minigame);
+                playerJsonDataSave.addStatisticForLatestSeason(GameType.BEDWARS,player,StatisticType.WINS);
+                playerJsonDataSave.addCoins(player,GameType.BEDWARS.name(), 35);
+                Minigame.sendCoinsMessage(player,35);
             }
         }
 
@@ -333,25 +375,40 @@ public class BedWarsGame extends Game {
         // update boolean
         arena.setState(GameState.ENDED);
 
+        // after a while teleport all players to lobby
         Bukkit.getScheduler().runTaskLater(minigame,() -> {
             for(UUID uuid : arena.getPlayers()) {
                 Player player = Bukkit.getPlayer(uuid);
 
                 if(player!=null) {
+                    // send teleport message
                     arena.sendMessage(ChatColor.WHITE + "You have been teleported to the lobby");
+
+                    // reset arena
                     arena.reset(false,0);
                 }
             }
         },400);
     }
 
+    // destroy a teams bed
     public boolean destroyBed(Team team, Player player) {
+        // cancel if someone tries to break their own bed
         if(arena.getPlayerTeam(player).equals(team)) { return true; }
+
+        // messages
         arena.sendMessage("");
         arena.sendMessage(ChatColor.BOLD + "BED DESTRUCTION > " + team.getColorCode()+team.getName() + ChatColor.GRAY + " bed was destroyed by " + arena.getPlayerTeam(player).getColorCode() + player.getDisplayName());
         arena.sendMessage("");
         bedsAlive.remove(team);
 
+        // add coins and statistics
+        PlayerJsonDataSave playerJsonDataSave = new PlayerJsonDataSave(player,minigame);
+        playerJsonDataSave.addCoins(player,GameType.BEDWARS.name(), 10);
+        playerJsonDataSave.addStatisticForLatestSeason(GameType.BEDWARS,player,StatisticType.BEDS_BROKEN);
+        Minigame.sendCoinsMessage(player,10);
+
+        // send bed destroyed message
         for(UUID uuid : arena.getPlayers()) {
             Player player1 = Bukkit.getPlayer(uuid);
             if(arena.getPlayerTeam(player1).equals(team)) {
@@ -365,7 +422,7 @@ public class BedWarsGame extends Game {
         return false;
     }
 
-    @Override
+    // check if is team game
     public boolean isTeamGame() {
         return true;
     }
@@ -381,10 +438,12 @@ public class BedWarsGame extends Game {
 
 
 
-    // Listener
+    // Listeners
 
+    //inventory click event
     @EventHandler
     public void inventoryClickEvent(InventoryClickEvent e) {
+        //if player is in arena and clicks armor slot -> cancel event
         if(arena.getPlayers().contains(e.getWhoClicked().getUniqueId())) {
             if(e.getSlotType().equals(InventoryType.SlotType.ARMOR)) {
                 e.setCancelled(true);
@@ -392,6 +451,7 @@ public class BedWarsGame extends Game {
         }
     }
 
+    // stop players dropping wooden sword
     @EventHandler
     public void itemDropEvent(PlayerDropItemEvent e) {
         if(arena.getPlayers().contains(e.getPlayer().getUniqueId())) {
@@ -402,6 +462,7 @@ public class BedWarsGame extends Game {
         }
     }
 
+    // cancel block breaks that happen before game starts and cancel bed breaking in certain cases.
     @EventHandler
     public void onBlockBreak(BlockBreakEvent e) {
         if(arena.getPlayers().contains(e.getPlayer().getUniqueId())) {
@@ -421,6 +482,7 @@ public class BedWarsGame extends Game {
     }
 
 
+    // entity damage event: detect player kills
     @EventHandler
     public void onEntityTakeDamage(EntityDamageEvent e) {
         if(e.getEntity() instanceof Player) {
@@ -435,6 +497,14 @@ public class BedWarsGame extends Game {
 
                     if(ed.getDamager() instanceof Player) {
                         killPlayer(player, KillReason.PLAYER_KILL, ed.getDamager().getName());
+                    } else if(ed.getDamager() instanceof Projectile){
+                        Projectile projectile = (Projectile) ed.getDamager();
+
+                        if(projectile.getShooter() instanceof Player) {
+                            Player shooter = (Player) projectile.getShooter();
+                            killPlayer(player,KillReason.PLAYER_KILL,shooter.getName());
+                        }
+
                     } else {
                         killPlayer(player, KillReason.ENTITY_KILL, ed.getDamager().getType().getName());
                     }
@@ -450,6 +520,7 @@ public class BedWarsGame extends Game {
         }
     }
 
+    // remove players who quit from arena
     @EventHandler
     public void onQuit(PlayerQuitEvent e) {
         if(alivePlayers.contains(e.getPlayer().getUniqueId())) {
@@ -458,6 +529,7 @@ public class BedWarsGame extends Game {
         }
     }
 
+    // allow players to rejoin
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         if(tempDeadPlayers.contains(e.getPlayer().getUniqueId())) {
@@ -475,6 +547,7 @@ public class BedWarsGame extends Game {
         }
     }
 
+    // set player armor level 0, 1, 2 or 3
     public void setPlayerArmorLevel(Player player, int armorLevel) {
         if(armorLevel>this.armorLevel.get(player.getUniqueId())) {
             this.armorLevel.put(player.getUniqueId(),armorLevel);
@@ -482,9 +555,40 @@ public class BedWarsGame extends Game {
         }
     }
 
+    // get player armour level
     public int getPlayerArmorLevel(Player player) {
         return armorLevel.get(player.getUniqueId());
     }
 
+    // get arena
     public Arena getArena() {return arena;}
+
+    // show top kills
+    void showTopKills() {
+
+        HashMap<String, Integer> playerKillsByName = new HashMap<>();
+        Integer playerKillsLength = 0;
+
+        List<String> topKills;
+
+
+        for(UUID uuid : playerKills.keySet()) {
+            String name = Bukkit.getPlayer(uuid).getName();
+
+            playerKillsByName.put(name, playerKills.get(uuid));
+            playerKillsLength++;
+        }
+
+        if(playerKillsLength > 2) {
+            topKills = ArenaManager.firstN(playerKillsByName, 3);
+        } else {
+            topKills = ArenaManager.firstN(playerKillsByName, 2);
+        }
+
+
+        arena.sendMessage(ChatColor.GOLD.toString() + ChatColor.BOLD + " TOP KILLS:");
+
+        topKills.forEach( (playerName) -> arena.sendMessage(playerName + " got " + playerKillsByName.get(playerName) + " kills") );
+
+    }
 }

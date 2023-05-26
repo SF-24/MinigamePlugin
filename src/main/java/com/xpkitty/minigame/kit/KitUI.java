@@ -1,6 +1,7 @@
 package com.xpkitty.minigame.kit;
 
 import com.xpkitty.minigame.Minigame;
+import com.xpkitty.minigame.instance.GameType;
 import com.xpkitty.minigame.instance.data.PlayerDataSave;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -15,7 +16,7 @@ import java.util.Locale;
 
 public class KitUI {
     Minigame minigame;
-    public KitUI(Player player, Minigame minigame, String game) {
+    public KitUI(Player player, Minigame minigame, GameType game) {
         this.minigame = minigame;
 
         Inventory gui = Bukkit.createInventory(null, 54, ChatColor.BLUE + "Kit selection");
@@ -32,8 +33,8 @@ public class KitUI {
             is.setItemMeta(isMeta);
 
             PlayerDataSave playerDataSave = new PlayerDataSave(player, minigame);
-            boolean ownsKit = playerDataSave.getKitOwnershipStatus(type.name().toLowerCase(Locale.ROOT), player);
-            if(ownsKit && game.equalsIgnoreCase(type.getGame())) {
+            boolean ownsKit = playerDataSave.getKitOwnershipStatus(type, player);
+            if(ownsKit && game.equals(type.getGame())) {
                 gui.addItem(is);
             }
         }

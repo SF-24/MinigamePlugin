@@ -2,7 +2,12 @@ package com.xpkitty.minigame.instance.data;
 
 import com.google.gson.Gson;
 import com.xpkitty.minigame.Minigame;
+import com.xpkitty.minigame.instance.GameType;
 import com.xpkitty.minigame.kit.KitType;
+import com.xpkitty.minigame.manager.ConfigManager;
+import com.xpkitty.minigame.manager.statistics.PlayerStatistics;
+import com.xpkitty.minigame.manager.statistics.StatisticType;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.io.*;
@@ -113,10 +118,13 @@ public class PlayerJsonDataSave {
             coinMap.put(element, 0);
         }
 
-        return new PlayerDataClass(coinMap, map);
+        HashMap<Integer, PlayerStatistics> stats = new HashMap<>();
+        stats.put(ConfigManager.getCurrentSeason(), new PlayerStatistics());
+
+        return new PlayerDataClass(coinMap, map, stats);
     }
 
-    //loads player json settings file
+    //loads player json data file
     public PlayerDataClass loadData(Minigame minigame, Player player) {
         File file = getFile(minigame, player);
         Gson gson = new Gson();
@@ -138,16 +146,49 @@ public class PlayerJsonDataSave {
             System.out.println("ERROR! PlayerDataClass is null");
         }
 
+        assert pdc != null;
+        pdc.updateStatisticHashMap();
+
         return pdc;
     }
 
 
+    // get player statistics for certain season
+    public PlayerStatistics getPlayerStatisticsForSeason(Player player, int season) {
+        PlayerDataClass data = loadData(minigame, player);
+        if(data.getStatisticsForSeason(season) != null) {
+            return data.getStatisticsForSeason(season);
+        }
 
+        return null;
+    }
+
+    public PlayerStatistics getPlayerStatisticsForLatestSeason(Player player) {
+        return getPlayerStatisticsForSeason(player, ConfigManager.getCurrentSeason());
+    }
+
+    public void addStatisticForLatestSeason(GameType gameType,Player player, StatisticType statisticType) {
+        PlayerDataClass data = loadData(minigame, player);
+        PlayerStatistics statistics = data.getStatisticsForSeason(ConfigManager.getCurrentSeason());
+        statistics.addToStatForGame(gameType,statisticType,1);
+        data.updateLatestPlayerStatistics(statistics);
+        saveFile(data,player);
+    }
+
+    public void saveFile(PlayerDataClass data, UUID uuid) {
+        Player player = Bukkit.getPlayer(uuid);
+        assert player != null;
+        writeData(data, getFile(minigame,player));
+    }
+
+    public void saveFile(PlayerDataClass data, Player player) {
+        writeData(data, getFile(minigame,player));
+    }
 
     public void giveKit(Player player, KitType kitType) {
         PlayerDataClass data = loadData(minigame, player);
         data.giveKit(kitType);
-        writeData(data, getFile(minigame,player));
+        saveFile(data,player);
     }
 
 
@@ -166,15 +207,15 @@ public class PlayerJsonDataSave {
             if (game.equalsIgnoreCase(coinType.name())) {
                 PlayerDataClass data = loadData(minigame, player);
                 data.addCoins(coinType, amount);
-                writeData(data, getFile(minigame,player));
+                saveFile(data,player);
             }
         }
     }
 
 
-    public boolean getKitOwnershipStatus(String kitName, Player player) {
+    public boolean getKitOwnershipStatus(KitType kit, Player player) {
 
-        kitName = kitName.toLowerCase(Locale.ROOT);
+        String kitName = kit.name();
         for(KitType kitType : KitType.values()) {
             if(kitType.name().equalsIgnoreCase(kitName)) {
                 return loadData(minigame, player).getKitStatus(kitType);

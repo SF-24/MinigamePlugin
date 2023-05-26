@@ -2,6 +2,7 @@ package com.xpkitty.minigame.instance.team;
 
 import com.xpkitty.minigame.Minigame;
 import com.xpkitty.minigame.instance.Arena;
+import com.xpkitty.minigame.instance.GameType;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -15,7 +16,7 @@ import java.util.Arrays;
 
 public class TeamUI {
     Minigame minigame;
-    public TeamUI(Player player, Minigame minigame, String game) {
+    public TeamUI(Player player, Minigame minigame, GameType game) {
         this.minigame = minigame;
 
         Inventory gui = Bukkit.createInventory(null, 54, ChatColor.BLUE + "Team selection");
