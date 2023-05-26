@@ -166,7 +166,7 @@ Attach the command to an npc and make it run as the player that clicked it.\
 In game, use ```/arena``` to view arena command help.\
 ```/arena list``` show a list of available arenas\
 ```/arena join <id>``` can be used to join an arena\
-```/arena leave``` leaves the current arena
+```/arena leave``` leaves the current arena\
 ```/arena shop``` opens the (unfinished and not fully working) arena coin shop\
 ```/arena team``` allows you to select your team in team games (like bedwars). If you do not select your team, it will be done for you when the game starts\
 ```/arena kit``` allows you to change your kit in ```PVP``` and ```SPLEEF```\
