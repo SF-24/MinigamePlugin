@@ -7,7 +7,7 @@ description: a minigame plugin
 depend: [Multiverse-Core]
 commands:
   arena:
-    description: Used to join and leave arenas
+    description: Used to join and leave arenas, open arena shop, kit and team menus
   lobby:
     description: Teleport to lobby
   shop:
