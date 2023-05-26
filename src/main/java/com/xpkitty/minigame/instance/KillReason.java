@@ -4,6 +4,8 @@ public enum KillReason {
     VOID_FALL,
     PLAYER_KILL,
     ENTITY_KILL,
-    GENERIC_REASON
+    HEIGHT_FALL,
+    GENERIC_REASON,
+    REJOIN
 
 }

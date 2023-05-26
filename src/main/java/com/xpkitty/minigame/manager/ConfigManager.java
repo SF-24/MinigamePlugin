@@ -1,11 +1,14 @@
 package com.xpkitty.minigame.manager;
 
 import com.xpkitty.minigame.Minigame;
+import com.xpkitty.minigame.instance.game.bedwars.Generator;
+import com.xpkitty.minigame.instance.game.bedwars.GeneratorType;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class ConfigManager {
 
@@ -50,5 +53,25 @@ public class ConfigManager {
             System.out.println(loc);
         }
         return corners;
+    }
+
+    public static ArrayList<Generator> getGenerators(int arenaId) {
+
+        ArrayList<Generator> generators = new ArrayList<>();
+
+        for(String element : config.getConfigurationSection("arenas."+arenaId+".generators.").getKeys(false)) {
+            String v = arenaId+".generators."+element;
+            System.out.println("generator v " + v);
+
+            Generator generator = new Generator(
+                    Bukkit.getWorld(config.getString("arenas." + arenaId + ".world")),
+                    config.getDouble("arenas." + v + ".x"),
+                    config.getDouble("arenas." + v + ".y"),
+                    config.getDouble("arenas." + v + ".z"),
+                    GeneratorType.valueOf(config.getString("arenas." + v + ".type").toUpperCase(Locale.ROOT)));
+
+            generators.add(generator);
+        }
+        return generators;
     }
 }

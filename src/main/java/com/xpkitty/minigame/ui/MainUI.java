@@ -1,6 +1,7 @@
-package com.xpkitty.minigame.shop;
+package com.xpkitty.minigame.ui;
 
 import com.xpkitty.minigame.Minigame;
+import com.xpkitty.minigame.ui.shop.ShopCategories;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -11,12 +12,12 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Arrays;
 
-public class ShopUI {
+public class MainUI {
     Minigame minigame;
-    public ShopUI(Player player, Minigame minigame) {
+    public MainUI(Player player, Minigame minigame) {
         this.minigame = minigame;
 
-        Inventory gui = Bukkit.createInventory(null, 9, ChatColor.BLUE + "Minigame shop");
+        Inventory gui = Bukkit.createInventory(null, 9, ChatColor.BLUE + "Minigames");
 
         for(ShopCategories type: ShopCategories.values()) {
             ItemStack is = new ItemStack(type.getMaterial());

@@ -5,7 +5,7 @@ import com.xpkitty.minigame.Minigame;
 import com.xpkitty.minigame.instance.Arena;
 import com.xpkitty.minigame.instance.team.TeamUI;
 import com.xpkitty.minigame.kit.KitUI;
-import com.xpkitty.minigame.shop.ShopUI;
+import com.xpkitty.minigame.ui.MainUI;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -131,10 +131,10 @@ public class ArenaCommand implements CommandExecutor {
                 } else {
                     player.sendMessage(ChatColor.RED + "You specified an invalid arena ID.");
                 }
-            } else if(args.length == 1 && args[0].equalsIgnoreCase("shop")) {
+            } else if(args.length == 1 && (args[0].equalsIgnoreCase("menu") || args[0].equalsIgnoreCase("shop"))) {
                 Arena arena = minigame.getArenaManager().getArena(player);
                 if(arena == null || !arena.getState().equals(GameState.LIVE)) {
-                    new ShopUI(player,minigame);
+                    new MainUI(player,minigame);
                 } else {
                     player.sendMessage(ChatColor.RED + "You cannot run this command while playing in an arena");
                 }

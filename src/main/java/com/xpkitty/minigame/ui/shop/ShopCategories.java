@@ -1,4 +1,4 @@
-package com.xpkitty.minigame.shop;
+package com.xpkitty.minigame.ui.shop;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;

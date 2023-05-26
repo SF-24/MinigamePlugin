@@ -10,3 +10,5 @@ commands:
     description: Used to join and leave arenas
   lobby:
     description: Teleport to lobby
+  shop:
+    description: Admins only

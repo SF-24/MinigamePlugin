@@ -45,7 +45,7 @@ public class ExplodeListener implements Listener {
                     arena.getWorld().createExplosion(e.getLocation(),4,false,false);
                     e.getLocation().getWorld().spawnParticle(Particle.EXPLOSION_LARGE, e.getLocation(), 25, 1.25, 1.25 ,1.25);
                 } else if(e.getEntity().getType().equals(EntityType.FIREBALL)) {
-                    arena.getWorld().createExplosion(e.getLocation(),1,false,false);
+                    arena.getWorld().createExplosion(e.getLocation(),2,true,false);
                     e.getLocation().getWorld().spawnParticle(Particle.EXPLOSION_LARGE, e.getLocation(), 15, 0.8, 0.8 ,0.8);
                 }
                 e.getLocation().getWorld().playSound(e.getLocation(), Sound.ENTITY_GENERIC_EXPLODE,1.0f, 1.0f);

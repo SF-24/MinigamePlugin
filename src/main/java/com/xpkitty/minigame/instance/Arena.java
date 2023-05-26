@@ -16,6 +16,8 @@ import com.xpkitty.minigame.listener.ConnectListener;
 import com.xpkitty.minigame.manager.ConfigManager;
 import org.bukkit.*;
 import org.bukkit.block.data.type.TNT;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
@@ -127,7 +129,8 @@ public class Arena {
 
             // heal players and clear effects
             for(UUID uuid : players) {
-
+                Bukkit.getPlayer(uuid).getInventory().clear();
+                Bukkit.getPlayer(uuid).getEnderChest().clear();
                 Bukkit.getPlayer(uuid).setHealth(20);
                 Bukkit.getPlayer(uuid).setFoodLevel(20);
                 for(PotionEffect effect: Bukkit.getPlayer(uuid).getActivePotionEffects()) { Bukkit.getPlayer(uuid).removePotionEffect(effect.getType()); }
@@ -172,6 +175,7 @@ public class Arena {
                 blocksToRemove.add(Material.LADDER);
                 blocksToRemove.add(Material.END_STONE);
                 blocksToRemove.add(Material.WATER);
+                blocksToRemove.add(Material.FIRE);
                 blocksToRemove.add(Material.OBSIDIAN);
                 blocksToRemove.add(Material.SPONGE);
                 blocksToRemove.add(Material.TNT);
@@ -221,6 +225,21 @@ public class Arena {
                         }
                     }
                 }
+
+                for(Entity entity: getWorld().getEntities()) {
+                    if(entity instanceof Item) {
+                        Location location = entity.getLocation();
+
+                        if(location.getX()>=startX && location.getX()<=endX) {
+                            if(location.getY()>=startY && location.getY()<=endY) {
+                                if(location.getZ()>=startZ && location.getZ()<=endZ) {
+                                    entity.remove();
+                                }
+                            }
+                        }
+
+                    }
+                }
             }
 
         }
@@ -234,6 +253,12 @@ public class Arena {
     }
 
     /* TOOLS */
+
+    public void playSound(Sound sound) {
+        for (UUID uuid: players) {
+            Bukkit.getPlayer(uuid).playSound(Bukkit.getPlayer(uuid).getLocation(),sound,1.0f,1.0f);
+        }
+    }
 
     public void sendMessage(String message){
         for (UUID uuid: players) {
@@ -276,9 +301,60 @@ public class Arena {
                 player.sendMessage(ChatColor.GOLD + "Choose your kit with /arena kit");
                 setKit(player.getUniqueId(), KitType.SPLEEF_DEFAULT);
             }
+            if(getGameType().equals("BEDWARS")) {
+                player.sendMessage(ChatColor.GOLD + "Select team with /arena team");
+            }
+            player.getInventory().clear();
 
-            if (state.equals(GameState.RECRUITING) && players.size() >= ConfigManager.getRequiredPlayers()) {
+            int reqPlayers = ConfigManager.getRequiredPlayers();
+            if(reqPlayers<getTeamsList().size()) {
+                reqPlayers=getTeamsList().size();
+            }
+
+
+            int plSize = Bukkit.getServer().getOnlinePlayers().size();
+            if(plSize>ConfigManager.getMaximumPlayers()) {
+                plSize=ConfigManager.getMaximumPlayers();
+            }
+
+            if (state.equals(GameState.RECRUITING) && players.size() >= reqPlayers) {
                 countdown.start();
+                if(plSize==players.size()) {
+                    if(game.isTeamGame()) {
+                        if (plSize<=players.size()+1 && countdown.getCountdownSeconds()>30) {
+                            countdown.setCountdownSeconds(30);
+                        }
+                    } else {
+                        if(!getGameType().equalsIgnoreCase("PVP") || getGameType().equals("SHOVELSPLEEF")) {
+                            if (plSize<=players.size()+1 && countdown.getCountdownSeconds()>30) {
+                                countdown.setCountdownSeconds(30);
+                            }
+                        } else {
+                            countdown.setCountdownSeconds(10);
+                        }
+                    }
+                } else if (plSize<=players.size()+1) {
+                    countdown.setCountdownSeconds(30);
+                }
+            }
+            if (state.equals(GameState.COUNTDOWN) && players.size() >= reqPlayers) {
+                if(plSize==players.size() && countdown.getCountdownSeconds()>10) {
+                    if(game.isTeamGame()) {
+                        if (plSize<=players.size()+1 && countdown.getCountdownSeconds()>30) {
+                            countdown.setCountdownSeconds(30);
+                        }
+                    } else {
+                        if(!getGameType().equalsIgnoreCase("PVP") || getGameType().equals("SHOVELSPLEEF")) {
+                            if (plSize<=players.size()+1 && countdown.getCountdownSeconds()>30) {
+                                countdown.setCountdownSeconds(30);
+                            }
+                        } else {
+                            countdown.setCountdownSeconds(10);
+                        }
+                    }
+                } else if (plSize<=players.size()+1 && countdown.getCountdownSeconds()>30) {
+                    countdown.setCountdownSeconds(30);
+                }
             }
         } else {
             player.sendMessage(ChatColor.RED+ "spawn == null");
@@ -401,12 +477,29 @@ public class Arena {
     public ArrayList<Team> getTeamsList() {
         if(isTeamGame()) {
             ArrayList<Team> teamList = new ArrayList<>();
-            for(Team team : Team.values()) {
-                teamList.add(team);
-            }
+            teamList.addAll(Arrays.asList(Team.values()));
             return teamList;
         }
         return null;
+    }
+
+
+    public List<UUID> getPlayersOfTeam(Team team, boolean onlyAlive) {
+        List<UUID> teamPlayers = new ArrayList<>();
+        for(UUID uuid : teams.keySet()) {
+            if(game instanceof BedWarsGame) {
+                if(onlyAlive && ((BedWarsGame) game).alivePlayers.contains(uuid)) {
+                    if(getPlayerTeam(Bukkit.getPlayer(uuid)).equals(team)) {
+                        teamPlayers.add(uuid);
+                    }
+                } else if(!onlyAlive) {
+                    if(getPlayerTeam(Bukkit.getPlayer(uuid)).equals(team)) {
+                        teamPlayers.add(uuid);
+                    }
+                }
+            }
+        }
+        return teamPlayers;
     }
 
 

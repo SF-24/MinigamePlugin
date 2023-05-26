@@ -4,6 +4,7 @@ import com.xpkitty.minigame.GameState;
 import com.xpkitty.minigame.Minigame;
 import com.xpkitty.minigame.manager.ConfigManager;
 import org.bukkit.ChatColor;
+import org.bukkit.Sound;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class Countdown extends BukkitRunnable {
@@ -34,6 +35,7 @@ public class Countdown extends BukkitRunnable {
         }
 
         if(countdownSeconds <= 10 || countdownSeconds % 15 == 0){
+            arena.playSound(Sound.BLOCK_DISPENSER_FAIL);
             arena.sendMessage(ChatColor.GREEN + "Game will start in " + countdownSeconds + " second" + (countdownSeconds == 1 ? "" : "s") + ".");
 
             if(countdownSeconds > 15) {
@@ -47,5 +49,12 @@ public class Countdown extends BukkitRunnable {
         } else { arena.sendTitle("",""); }
 
         countdownSeconds--;
+    }
+
+    public void setCountdownSeconds(int seconds) {
+        countdownSeconds=seconds;
+    }
+    public int getCountdownSeconds() {
+        return countdownSeconds;
     }
 }

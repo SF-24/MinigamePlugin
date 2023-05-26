@@ -1,4 +1,4 @@
-package com.xpkitty.minigame.shop;
+package com.xpkitty.minigame.ui.shop;
 
 import com.xpkitty.minigame.Minigame;
 import com.xpkitty.minigame.instance.data.PlayerDataSave;
