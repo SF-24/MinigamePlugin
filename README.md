@@ -1,10 +1,11 @@
 # MinigamePlugin
 
-The minigame plugins goal is to create playable minigames in Minecraft
+The minigame plugins goal is to create playable minigames in Minecraft\
+Build with maven
 
 ## Installation
 
-Place in the ```plugins``` folder of your ```spigot``` (or any spigot fork) server.
+Place built ```.jar``` file in the ```plugins``` folder of your ```spigot``` (or any spigot fork) server.
 
 ## Usage
 Arena data is stored in config.
@@ -70,7 +71,7 @@ setup: a floating ring over lava, a bit like in Sumo duels. Can be made of ice.\
 
 #### WARNING!
 ```SHOVELSPLEEF``` may damage terrain around the arena, because before every game it places snow in a large rectangle. Coordinates cannot yet be changed.\
-I reccomend using only 1 spawn with ```shovelspleef```.\
+I reccomend using only 1 spawn with ```SHOVELSPLEEF```.\
 Otherwise you may run into more bugs. 
 
 ### BedWars file configuration
