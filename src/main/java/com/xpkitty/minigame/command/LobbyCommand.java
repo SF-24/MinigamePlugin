@@ -29,11 +29,9 @@ public class LobbyCommand implements CommandExecutor {
             if(arena != null) {
                 player.sendMessage(ChatColor.RED + "You left the arena");
                 arena.removePlayer(player);
-                if(arena.getState() == GameState.LIVE) {
-
-                }
             } else {
                 player.sendMessage(ChatColor.RED + "You are now in the lobby");
+                Minigame.giveLobbyItems(player);
             }
         }
 

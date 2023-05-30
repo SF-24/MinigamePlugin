@@ -557,7 +557,11 @@ public class BedWarsGame extends Game {
 
     // get player armour level
     public int getPlayerArmorLevel(Player player) {
-        return armorLevel.get(player.getUniqueId());
+        if(armorLevel.get(player.getUniqueId())!=null) {
+            return armorLevel.get(player.getUniqueId());
+        } else {
+            return -1;
+        }
     }
 
     // get arena

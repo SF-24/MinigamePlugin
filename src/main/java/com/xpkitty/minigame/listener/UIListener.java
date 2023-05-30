@@ -46,7 +46,9 @@ public class UIListener implements Listener {
     public void onClick(InventoryClickEvent e) {
         Player player = (Player) e.getWhoClicked();
 
-        if(e.getView().getTitle().contains("Kit selection") && e.getInventory() != null && e.getCurrentItem() != null) {
+        if(e.getView().getTitle().contains("Player Statistics")) {
+            e.setCancelled(true);
+        } else if(e.getView().getTitle().contains("Kit selection") && e.getInventory() != null && e.getCurrentItem() != null) {
             e.setCancelled(true);
 
             KitType type = KitType.valueOf(e.getCurrentItem().getItemMeta().getLocalizedName());
@@ -144,7 +146,7 @@ public class UIListener implements Listener {
                 }
 
                 for(Item element : Item.values()) {
-                    if(element.getName().equalsIgnoreCase(locName)) {
+                    if(element.name().equalsIgnoreCase(locName)) {
                         itemVal=element;
                     }
                 }
@@ -153,7 +155,7 @@ public class UIListener implements Listener {
 
                 boolean canBuy = true;
                 final boolean isArmour = itemVal.equals(Item.CHAIN_ARMOR) || itemVal.equals(Item.IRON_ARMOR) || itemVal.equals(Item.DIAMOND_ARMOR);
-                if(isArmour) {
+                if(isArmour && player.getInventory().containsAtLeast(price, itemVal.getPrice())) {
                     if(itemVal.equals(Item.CHAIN_ARMOR)) {
                        canBuy = GameItemManager.upgradeArmour(player,1,minigame);
                     } else if(itemVal.equals(Item.IRON_ARMOR)) {
@@ -182,7 +184,7 @@ public class UIListener implements Listener {
                         //if bought item is invis potion
                     } else if(itemVal.equals(Item.INVIS)) {
                         GameItemManager.getPotion(player, PotionEffectType.INVISIBILITY, 60, 0);
-                    } else if(minigame.getArenaManager().getArena(player).getState().equals(GameState.LIVE)) {
+                    } else if(itemVal.equals(Item.WOOL) || itemVal.equals(Item.GLASS) || itemVal.equals(Item.TERRACOTTA)) {
                         // declare variables
                         Arena arena = minigame.getArenaManager().getArena(player);
                         Material material = Material.STONE;
@@ -202,6 +204,7 @@ public class UIListener implements Listener {
                         // if is glass rename to blast proof glass
                         if(itemVal.equals(Item.GLASS)) {
                             ItemMeta glassMeta = teamBlockToGiveToPlayer.getItemMeta();
+                            assert glassMeta != null;
                             glassMeta.setDisplayName(ChatColor.WHITE+"Blast Proof Glass");
                             teamBlockToGiveToPlayer.setItemMeta(glassMeta);
                         }
@@ -215,8 +218,7 @@ public class UIListener implements Listener {
                         player.getInventory().addItem(giveItem);
                     }
 
-
-                    } else {
+                } else {
                     player.sendMessage(ChatColor.RED + "Not enough " + itemVal.getCurrency().name().toLowerCase(Locale.ROOT));
                 }
             }

@@ -89,6 +89,16 @@ public class GameSelectorUI {
                 for(GameType element : GameType.values()) {
                     boolean canAddMinigame = true;
 
+                    //getting player count
+                    int players = 0;
+
+                    // get players count
+                    for(Arena arena : minigame.getArenaManager().getArenas()) {
+                        if(arena.getGameType().equals(element)) {
+                            players+=arena.getPlayers().size();
+                        }
+                    }
+
                     // don't show element if category is null
                     if(element.getCategory()==null) {
                         canAddMinigame=false;
@@ -111,6 +121,13 @@ public class GameSelectorUI {
                         meta.setDisplayName(ChatColor.WHITE + element.getDisplayName());
                         meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
                         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+
+                        String peoplePlayingString = " people playing";
+                        if(players==1) {
+                            peoplePlayingString = " person playing";
+                        }
+
+                        meta.setLore(Collections.singletonList(ChatColor.GRAY.toString() + players + peoplePlayingString));
 
                         // set localized name
                         meta.setLocalizedName("game_" + element.name());
@@ -152,8 +169,8 @@ public class GameSelectorUI {
 
                     // set lore (description)
                     ArrayList<String> lore = new ArrayList<>();
-                    lore.add(ChatColor.GRAY + String.valueOf(arena.getPlayers().size()) + "/"+ arena.getMaxPlayers() +" playing");
                     lore.add(arena.getState().getDisplayName());
+                    lore.add(ChatColor.GRAY + String.valueOf(arena.getPlayers().size()) + "/"+ arena.getMaxPlayers() +" playing");
 
                     if (arena.getState().equals(GameState.RECRUITING)) {
                         int requiredPlayers = arena.getRequiredPlayers()-arena.getPlayers().size();

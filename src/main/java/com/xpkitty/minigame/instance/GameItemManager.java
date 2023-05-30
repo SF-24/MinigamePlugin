@@ -78,6 +78,12 @@ public class GameItemManager {
             }
         } else if(tool.equals(Tool.SHEARS)) {
             player.getInventory().addItem(getUnbreakableItem(Material.SHEARS));
+        } else if(tool.equals(Tool.KNOCKBACK_STICK)) {
+            ItemStack stick = new ItemStack(Material.STICK);
+            ItemMeta stickMeta = stick.getItemMeta();
+            stickMeta.setDisplayName(ChatColor.WHITE+"Knockback Stick");
+            stickMeta.addEnchant(Enchantment.KNOCKBACK, 3, true);
+            stick.setItemMeta(stickMeta);
         }
     }
 
@@ -120,10 +126,10 @@ public class GameItemManager {
             } else {
                 return false;
             }
-            bedWarsGame.setPlayerArmorLevel(player,armorLevel);
-            player.getInventory().setBoots(boots);
-            player.getInventory().setLeggings(leggings);
-            return true;
+                bedWarsGame.setPlayerArmorLevel(player, armorLevel);
+                player.getInventory().setBoots(boots);
+                player.getInventory().setLeggings(leggings);
+                return true;
         }
         return false;
     }

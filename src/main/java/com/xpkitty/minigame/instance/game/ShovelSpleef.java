@@ -7,13 +7,18 @@ import com.xpkitty.minigame.instance.Game;
 import com.xpkitty.minigame.instance.GameType;
 import com.xpkitty.minigame.instance.data.PlayerDataSave;
 import com.xpkitty.minigame.listener.ConnectListener;
+import com.xpkitty.minigame.manager.ConfigManager;
+import com.xpkitty.minigame.manager.Region;
 import com.xpkitty.minigame.manager.statistics.StatisticType;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
@@ -47,37 +52,7 @@ public class ShovelSpleef extends Game {
      public void giveWin(Player player) {
          World world = arena.getWorld();
 
-         for(int y = 63; y < 71; y++) {
-             for(int i = -12; i < 11; i++) {
-                 System.out.println("1st for executed");
-                 for(int j = -22; j < 21; j++) {
-                     System.out.println("setting spleef block");
-
-                     Block block = world.getBlockAt(j, y, i);
-                     block.setType(Material.AIR);
-                 }
-             }
-         }
-
-         for(int i = -12; i < 11; i++) {
-             System.out.println("1st for executed");
-             for(int j = -22; j < 21; j++) {
-                 System.out.println("setting spleef block");
-
-                 Block block = world.getBlockAt(j, 63, i);
-                 block.setType(Material.BARRIER);
-             }
-         }
-
-         for(int i = -10; i < 9; i++) {
-             System.out.println("1st for executed");
-             for(int j = -20; j < 19; j++) {
-                 System.out.println("setting spleef block");
-
-                 Block block = world.getBlockAt(j, 63, i);
-                 block.setType(Material.SNOW_BLOCK);
-             }
-         }
+        resetArena(true);
 
         for(UUID uuid : arena.getPlayers()) {
             Bukkit.getPlayer(uuid).setHealth(20);
@@ -110,34 +85,13 @@ public class ShovelSpleef extends Game {
          }, 300);
     }
 
-
     @Override
     public void onStart() {
         Block newblock = arena.getWorld().getBlockAt(0, 63, 0);
         newblock.setType(Material.SNOW_BLOCK);
         World world = arena.getWorld();
 
-        for(int y = 63; y < 71; y++) {
-            for(int i = -12; i < 11; i++) {
-                System.out.println("1st for executed");
-                for(int j = -22; j < 21; j++) {
-                    System.out.println("setting spleef block");
-
-                    Block block = world.getBlockAt(j, y, i);
-                    block.setType(Material.AIR);
-                }
-            }
-        }
-
-        for(int i = -10; i < 9; i++) {
-            System.out.println("1st for executed");
-            for(int j = -20; j < 19; j++) {
-                System.out.println("setting spleef block");
-
-                Block block = world.getBlockAt(j, 63, i);
-                block.setType(Material.SNOW_BLOCK);
-            }
-        }
+        resetArena(false);
 
         arena.sendMessage(ChatColor.GREEN + "GAME HAS STARTED! Dig under other players to knock the into lava. The last person alive wins. Good luck!");
         arena.clearInventory();
@@ -211,15 +165,7 @@ public class ShovelSpleef extends Game {
 
     @EventHandler
     public void onRespawn(PlayerRespawnEvent e) {
-        if(arena.getState().equals(GameState.LIVE)) {
-            if (alivePlayers.size() == 1) {
-                if (lastdead.getName().equals(e.getPlayer().getName())) {
-                    giveWin(winner);
-                }
-            }
-            e.getPlayer().teleport(arena.getRandomSpawnLocation());
-            e.getPlayer().setGameMode(GameMode.SPECTATOR);
-        }
+        // TODO: REMOVE
     }
 
     @EventHandler
@@ -231,4 +177,91 @@ public class ShovelSpleef extends Game {
         }
     }
 
+    @EventHandler
+    public void onBlockPlace(BlockPlaceEvent e) {
+        if(!ConfigManager.getGameSubtype(arena.getId()).equals(GameSubtype.SPLEEF_OLD)) {
+            Region region = new Region(ConfigManager.getCorners(arena.getId()).get(0), ConfigManager.getCorners(arena.getId()).get(1));
+            if (!region.isLocationInRegion(e.getBlock().getLocation())) {
+                e.setCancelled(true);
+            }
+        }
+    }
+
+    void resetArena(boolean afterGame) {
+        World world = arena.getWorld();
+        GameSubtype gameSubtype = ConfigManager.getGameSubtype(arena.getId());
+
+        if(gameSubtype.equals(GameSubtype.SPLEEF_OLD)) {
+            for (int y = 63; y < 71; y++) {
+                for (int i = -12; i < 11; i++) {
+                    System.out.println("1st for executed");
+                    for (int j = -22; j < 21; j++) {
+                        System.out.println("setting spleef block");
+
+                        Block block = world.getBlockAt(j, y, i);
+                        block.setType(Material.AIR);
+                    }
+                }
+            }
+
+            for (int i = -10; i < 9; i++) {
+                System.out.println("1st for executed");
+                for (int j = -20; j < 19; j++) {
+                    System.out.println("setting spleef block");
+
+                    Block block = world.getBlockAt(j, 63, i);
+                    block.setType(Material.SNOW_BLOCK);
+                }
+            }
+
+
+            if (afterGame) {
+                for (int i = -12; i < 11; i++) {
+                    System.out.println("1st for executed");
+                    for (int j = -22; j < 21; j++) {
+                        System.out.println("setting spleef block");
+
+                        Block block = world.getBlockAt(j, 63, i);
+                        block.setType(Material.BARRIER);
+                    }
+                }
+            }
+        } else {
+            Location lowerCorner = ConfigManager.getSingleCorner(arena.getId(),CornerType.LOWER);
+            Location higherCorner = ConfigManager.getSingleCorner(arena.getId(),CornerType.HIGHER);
+
+            Region region = new Region(lowerCorner,higherCorner);
+            region.fillRegion(Material.AIR);
+            region.fillRegionAtSetY(Material.SNOW_BLOCK, (int) region.getLowCorner().getY());
+        }
+    }
+
+    @EventHandler
+    void onTakeDamage(EntityDamageEvent e) {
+        if(e.getEntity().getType().equals(EntityType.PLAYER) && (arena.getState().equals(GameState.LIVE) || arena.getState().equals(GameState.ENDED))) {
+            Player player = (Player) e.getEntity();
+            if(arena.getPlayers().contains(player.getUniqueId())) {
+                if(e.getCause().equals(EntityDamageEvent.DamageCause.LAVA)) {
+                    alivePlayers.remove(player.getUniqueId());
+                    player.setHealth(20);
+                    lastdead=player;
+
+                    // if state is live test for win
+                    if(arena.getState().equals(GameState.LIVE)) {
+                        if (alivePlayers.size() == 1) {
+                            if (lastdead.getName().equals(player.getName())) {
+                                winner=Bukkit.getPlayer(alivePlayers.get(0));
+                                giveWin(winner);
+                            }
+                        }
+                        player.teleport(arena.getRandomSpawnLocation());
+                        player.setGameMode(GameMode.SPECTATOR);
+                    }
+                } else {
+                    //cancel damage
+                    e.setDamage(0);
+                }
+            }
+        }
+    }
 }

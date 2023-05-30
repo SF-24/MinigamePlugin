@@ -52,6 +52,9 @@ public class PregameListener implements Listener {
                     player.teleport(minigame.getArenaManager().getArena((Player) player).getRandomSpawnLocation());
                     ((Player) player).setHealth(20);
                     ((Player) player).setFoodLevel(20);
+                    if(player.getLocation().getY()>0) {
+                        player.teleport(minigame.getArenaManager().getArena((Player) player).getRandomSpawnLocation());
+                    }
                 }
             }
         }

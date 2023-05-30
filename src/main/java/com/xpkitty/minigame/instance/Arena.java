@@ -126,6 +126,7 @@ public class Arena {
                     for (PotionEffect effect : player.getActivePotionEffects()) {
                         player.removePotionEffect(effect.getType());
                     }
+                    Minigame.giveLobbyItems(player);
                 }
             }
 
@@ -359,6 +360,8 @@ public class Arena {
     }
 
     public void removePlayer(Player player) {
+        // remove player from arena (whole function)
+
         Team team = getPlayerTeam(player);
         players.remove(player.getUniqueId());
 
@@ -366,6 +369,7 @@ public class Arena {
             isTeamFull(team, null, true);
         }
 
+        // tp player out and send title
         player.teleport(ConfigManager.getLobbySpawn());
         player.sendTitle("","");
 
@@ -384,6 +388,7 @@ public class Arena {
         player.setFallDistance(0);
         System.out.println(player.getName() + " left arena " + id);
 
+        // test depending on game state
         if(state == GameState.COUNTDOWN && players.size() < ConfigManager.getRequiredPlayers()) {
             sendMessage(ChatColor.RED + "There are not enough players. Countdown stopped.");
             reset(false, 0);
@@ -394,6 +399,9 @@ public class Arena {
             sendMessage(ChatColor.RED + "The game has ended as too many players have left.");
             reset(false, 0);
         }
+
+        // give lobby items to player
+        Minigame.giveLobbyItems(player);
     }
 
     /* INFO */

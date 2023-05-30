@@ -14,7 +14,7 @@ import static com.xpkitty.minigame.manager.statistics.StatisticType.WINS;
 
 public enum GameType {
     BLOCK_GAME("Deprecated: Block Game", Material.OAK_PLANKS, false, false, null, null),
-    PVP("PvP", Material.DIAMOND_SWORD, false, true, GameCategories.PRACTICE, Arrays.asList(WINS, KILLS)),
+    PVP("PvP", Material.IRON_SWORD, false, true, GameCategories.PRACTICE, Arrays.asList(WINS, KILLS)),
     SHOVELSPLEEF("Shovel Spleef", Material.DIAMOND_SHOVEL,false, true, GameCategories.MINIGAMES, Collections.singletonList(WINS)),
     KNOCKOUT("Knockout", Material.STICK,false, false, GameCategories.PRACTICE, Collections.singletonList(WINS)),
     BEDWARS("BedWars",Material.RED_BED,true, false, GameCategories.MINIGAMES, Arrays.asList(WINS,KILLS,StatisticType.FINAL_KILLS,StatisticType.BEDS_BROKEN));

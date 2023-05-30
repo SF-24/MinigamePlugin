@@ -66,7 +66,7 @@ public class Shop {
                     String lore = item.getCurrency().getColorCode()+item.getPrice()+" "+v;
                     meta.setLore(Collections.singletonList(lore));
 
-                    meta.setLocalizedName(item.getName());
+                    meta.setLocalizedName(item.name());
 
                     stack.setItemMeta(meta);
                     ui.setItem(item.getMainSlot(),stack);
@@ -87,7 +87,7 @@ public class Shop {
                     String lore = item.getCurrency().getColorCode()+item.getPrice()+" "+v;
                     meta.setLore(Collections.singletonList(lore));
 
-                    meta.setLocalizedName(item.getName());
+                    meta.setLocalizedName(item.name());
 
                     stack.setItemMeta(meta);
                     ui.setItem(item.getSlot(),stack);

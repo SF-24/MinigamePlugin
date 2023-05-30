@@ -9,8 +9,14 @@ import com.xpkitty.minigame.manager.ArenaManager;
 import com.xpkitty.minigame.manager.ConfigManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.Collections;
 
 public class Minigame extends JavaPlugin{
 
@@ -46,6 +52,38 @@ public class Minigame extends JavaPlugin{
 
     public static void sendCoinsMessage(Player player, int amount) {
         player.sendMessage(ChatColor.GOLD + "+" + amount + " coins");
+    }
+
+    public static void giveLobbyItems(Player player) {
+        ItemStack compass = new ItemStack(Material.COMPASS);
+        ItemMeta compassMeta = compass.getItemMeta();
+        assert compassMeta != null;
+        compassMeta.setDisplayName(ChatColor.WHITE + "Game Selector");
+        compassMeta.setLocalizedName("lobby_game_selector");
+        compassMeta.setLore(Collections.singletonList(ChatColor.GRAY + "Right click when in hand to open game selection"));
+        compass.setItemMeta(compassMeta);
+
+        ItemStack shop = new ItemStack(Material.EMERALD);
+        ItemMeta shopMeta = shop.getItemMeta();
+        assert shopMeta != null;
+        shopMeta.setDisplayName(ChatColor.WHITE + "Shop");
+        shopMeta.setLocalizedName("lobby_shop");
+        shopMeta.setLore(Collections.singletonList(ChatColor.GRAY + "Right click when in hand to open shop"));
+        shop.setItemMeta(shopMeta);
+
+        ItemStack profile = new ItemStack(Material.PLAYER_HEAD);
+        SkullMeta profileMeta = (SkullMeta) profile.getItemMeta();
+        assert profileMeta != null;
+        profileMeta.setOwningPlayer(player);
+        profileMeta.setDisplayName(ChatColor.WHITE + "Profile");
+        profileMeta.setLocalizedName("lobby_profile");
+        profileMeta.setLore(Collections.singletonList(ChatColor.GRAY + "Right click when in hand to open profile"));
+        profile.setItemMeta(profileMeta);
+
+        player.getInventory().clear();
+        player.getInventory().setItem(0,compass);
+        player.getInventory().setItem(4,shop);
+        player.getInventory().setItem(8,profile);
     }
 
     public ConfigManager getConfigManager() {return configManager; }

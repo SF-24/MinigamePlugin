@@ -2,6 +2,8 @@ package com.xpkitty.minigame.manager;
 
 import com.xpkitty.minigame.Minigame;
 import com.xpkitty.minigame.instance.GameType;
+import com.xpkitty.minigame.instance.game.CornerType;
+import com.xpkitty.minigame.instance.game.GameSubtype;
 import com.xpkitty.minigame.instance.game.bedwars.Generator;
 import com.xpkitty.minigame.instance.game.bedwars.GeneratorType;
 import org.bukkit.Bukkit;
@@ -10,6 +12,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.Objects;
 
 public class ConfigManager {
 
@@ -29,6 +32,8 @@ public class ConfigManager {
     public static int getCountdownSeconds() { return config.getInt("countdown-seconds"); }
 
     public static String getMessage() { return config.getString("welcome-message"); }
+
+    public static GameSubtype getGameSubtype(int arenaId) { return GameSubtype.valueOf(Objects.requireNonNull(config.getString("arenas." + arenaId + ".game-subtype")).toUpperCase(Locale.ROOT));}
 
     public static Location getLobbySpawn() {
         return new Location(
@@ -56,6 +61,11 @@ public class ConfigManager {
             System.out.println(loc);
         }
         return corners;
+    }
+
+    public static Location getSingleCorner(int arenaId, CornerType cornerType) {
+        ArrayList<Location> corners = getCorners(arenaId);
+        return LocationManager.getSingleCornerFromTwo(corners.get(0),corners.get(1),cornerType);
     }
 
     public static ArrayList<Generator> getGenerators(int arenaId) {

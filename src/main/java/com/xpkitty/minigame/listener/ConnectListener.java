@@ -42,6 +42,7 @@ public class ConnectListener implements Listener {
         if(!disabledWorlds.contains(player.getWorld().getName())) {
             player.sendMessage(ChatColor.GREEN + ConfigManager.getMessage());
             player.teleport(ConfigManager.getLobbySpawn());
+            Minigame.giveLobbyItems(player);
         }
         PlayerDataSave instance = new PlayerDataSave(player, minigame);
 

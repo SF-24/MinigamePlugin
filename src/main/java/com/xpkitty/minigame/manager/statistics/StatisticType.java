@@ -1,17 +1,25 @@
 package com.xpkitty.minigame.manager.statistics;
 
+import org.bukkit.ChatColor;
+
 public enum StatisticType {
 
-    WINS("Wins"),
-    KILLS("Kills"),
-    FINAL_KILLS("Final kills"),
-    BEDS_BROKEN("Beds Broken");
+    WINS("Wins", ChatColor.GREEN.toString()),
+    KILLS("Kills", ChatColor.AQUA.toString()),
+    FINAL_KILLS("Final kills", ChatColor.RED.toString()),
+    BEDS_BROKEN("Beds Broken", ChatColor.YELLOW.toString());
 
     private final String name;
+    private final String colorCode;
 
-    StatisticType(String name) {
+    StatisticType(String name, String colorCode) {
         this.name=name;
+        this.colorCode = colorCode;
     }
 
     public String getName() {return name;}
+
+    public String getColor() {
+        return colorCode;
+    }
 }

@@ -61,8 +61,8 @@ public class KnockoutGame extends Game {
         PlayerDataSave dataSave = connectListener.getPlayerData(player);
         if(dataSave != null) {
             dataSave.getPlayerJsonDataSave().addStatisticForLatestSeason(GameType.KNOCKOUT,player, StatisticType.WINS);
-            dataSave.addPoints(player , GameType.SHOVELSPLEEF, coinsForWin);
-            System.out.println("added " + coinsForWin + " SPLEEF coins to " + player.getDisplayName());
+            dataSave.addPoints(player , GameType.KNOCKOUT, coinsForWin);
+            System.out.println("added " + coinsForWin + " KNOCKOUT coins to " + player.getDisplayName());
         } else {
             System.out.println("data save is null!");
         }
