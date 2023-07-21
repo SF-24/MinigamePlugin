@@ -1,3 +1,5 @@
+// 2023. Author: S.Frynas (XpKitty), e-mail: sebastian.frynas@outlook.com, licence: GNU GPL v3
+
 package com.xpkitty.minigame.instance.game;
 
 import com.xpkitty.minigame.GameState;
@@ -12,7 +14,6 @@ import com.xpkitty.minigame.manager.Region;
 import com.xpkitty.minigame.manager.statistics.StatisticType;
 import org.bukkit.*;
 import org.bukkit.block.Block;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -30,14 +31,13 @@ import java.util.List;
 import java.util.UUID;
 
 public class ShovelSpleef extends Game {
-    private static FileConfiguration config;
 
     List<UUID> alivePlayers = new ArrayList<>();
     Minigame minigame;
     ConnectListener connectListener;
 
     int coinsForWin = 10;
-    Player lastdead;
+    Player lastDead;
     Player winner;
 
 
@@ -50,14 +50,14 @@ public class ShovelSpleef extends Game {
 
 
      public void giveWin(Player player) {
-         World world = arena.getWorld();
-
-        resetArena(true);
+         resetArena(true);
 
         for(UUID uuid : arena.getPlayers()) {
-            Bukkit.getPlayer(uuid).setHealth(20);
-            Bukkit.getPlayer(uuid).setFoodLevel(20);
-            for(PotionEffect effect: Bukkit.getPlayer(uuid).getActivePotionEffects()) { Bukkit.getPlayer(uuid).removePotionEffect(effect.getType()); }
+            Player uuidPlayer = Bukkit.getPlayer(uuid);
+            assert uuidPlayer!=null;
+            uuidPlayer.setHealth(20);
+            uuidPlayer.setFoodLevel(20);
+            for(PotionEffect effect: uuidPlayer.getActivePotionEffects()) { uuidPlayer.removePotionEffect(effect.getType()); }
         }
         player.sendTitle(ChatColor.GREEN + "VICTORY","",10,100,10);
 
@@ -87,9 +87,8 @@ public class ShovelSpleef extends Game {
 
     @Override
     public void onStart() {
-        Block newblock = arena.getWorld().getBlockAt(0, 63, 0);
-        newblock.setType(Material.SNOW_BLOCK);
-        World world = arena.getWorld();
+        Block newBlock = arena.getWorld().getBlockAt(0, 63, 0);
+        newBlock.setType(Material.SNOW_BLOCK);
 
         resetArena(false);
 
@@ -99,6 +98,7 @@ public class ShovelSpleef extends Game {
         Bukkit.getScheduler().runTaskLater(minigame, () -> {
             for(UUID uuid : arena.getPlayers()) {
                 Player player = Bukkit.getPlayer(uuid);
+                assert player != null;
                 player.removePotionEffect(PotionEffectType.WEAKNESS);
             }
         }, 300);
@@ -106,10 +106,11 @@ public class ShovelSpleef extends Game {
 
         for(UUID uuid: arena.getPlayers()) {
             Player player = Bukkit.getPlayer(uuid);
+            assert player != null;
             player.setHealth(20);
             player.setFoodLevel(20);
             alivePlayers.add(uuid);
-            for(PotionEffect effect: player.getActivePotionEffects()) { Bukkit.getPlayer(uuid).removePotionEffect(effect.getType()); }
+            for(PotionEffect effect: player.getActivePotionEffects()) { player.removePotionEffect(effect.getType()); }
             player.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 1000000, 10, true, false, false));
             player.setGameMode(GameMode.SURVIVAL);
             player.closeInventory();
@@ -139,7 +140,7 @@ public class ShovelSpleef extends Game {
                 alivePlayers.remove(e.getEntity().getUniqueId());
                 if (alivePlayers.size() == 1) {
                     arena.clearInventory();
-                    lastdead = e.getEntity();
+                    lastDead = e.getEntity();
                     winner = Bukkit.getPlayer(alivePlayers.get(0));
                 }
             }
@@ -147,13 +148,6 @@ public class ShovelSpleef extends Game {
 
         e.getEntity().getWorld().setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true);
         e.getEntity().getWorld().setGameRule(GameRule.SHOW_DEATH_MESSAGES, false);
-
-        /*if (pls.contains(e.getEntity().getUniqueId())) {
-            Bukkit.getScheduler().runTaskLater(minigame, () -> {
-                e.getEntity().teleport(arena.getRespawn());
-                pls.remove(e.getEntity().getUniqueId());
-            }, 20);
-        }*/
     }
 
     @EventHandler
@@ -171,7 +165,7 @@ public class ShovelSpleef extends Game {
     @EventHandler
     public void onBlockBreak(BlockBreakEvent e) {
         if(!(e.getBlock().getType() == Material.SNOW_BLOCK)) {
-            if(arena.getPlayers().contains(e.getPlayer())) {
+            if(arena.getPlayers().contains(e.getPlayer().getUniqueId())) {
                 e.setCancelled(true);
             }
         }
@@ -244,12 +238,12 @@ public class ShovelSpleef extends Game {
                 if(e.getCause().equals(EntityDamageEvent.DamageCause.LAVA)) {
                     alivePlayers.remove(player.getUniqueId());
                     player.setHealth(20);
-                    lastdead=player;
+                    lastDead =player;
 
                     // if state is live test for win
                     if(arena.getState().equals(GameState.LIVE)) {
                         if (alivePlayers.size() == 1) {
-                            if (lastdead.getName().equals(player.getName())) {
+                            if (lastDead.getName().equals(player.getName())) {
                                 winner=Bukkit.getPlayer(alivePlayers.get(0));
                                 giveWin(winner);
                             }

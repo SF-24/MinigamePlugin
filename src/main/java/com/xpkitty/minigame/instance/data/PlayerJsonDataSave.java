@@ -1,3 +1,5 @@
+// 2023. Author: S.Frynas (XpKitty), e-mail: sebastian.frynas@outlook.com, licence: GNU GPL v3
+
 package com.xpkitty.minigame.instance.data;
 
 import com.google.gson.Gson;
@@ -12,7 +14,6 @@ import org.bukkit.entity.Player;
 
 import java.io.*;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.UUID;
 
 public class PlayerJsonDataSave {

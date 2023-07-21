@@ -1,3 +1,5 @@
+// 2023. Author: S.Frynas (XpKitty), e-mail: sebastian.frynas@outlook.com, licence: GNU GPL v3
+
 package com.xpkitty.minigame.manager;
 
 public class MathsManager {
@@ -6,19 +8,13 @@ public class MathsManager {
         double lowest = Math.min(a, b);
         double highest = Math.max(a, b);
 
-        if (testedNum > lowest && testedNum < highest) {
-            return true;
-        }
-        return false;
+        return testedNum > lowest && testedNum < highest;
     }
 
     public static boolean isNumberInNumberRegion(double a, double b, double testedNum) {
         double lowest = Math.min(a, b);
         double highest = Math.max(a, b);
 
-        if (testedNum >= lowest && testedNum <= highest) {
-            return true;
-        }
-        return false;
+        return testedNum >= lowest && testedNum <= highest;
     }
 }

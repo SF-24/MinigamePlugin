@@ -1,3 +1,5 @@
+// 2023. Author: S.Frynas (XpKitty), e-mail: sebastian.frynas@outlook.com, licence: GNU GPL v3
+
 package com.xpkitty.minigame.manager;
 
 import com.xpkitty.minigame.instance.game.CornerType;
@@ -22,7 +24,7 @@ public class Region{
     }
 
     public Location getLowCorner() {return lowCorner;}
-    public Location getHighCorner() {return getHighCorner();}
+    public Location getHighCorner() {return highCorner;}
 
     public boolean isPlayerInRegion(Player player) {
         return isLocationInRegion(player.getLocation());

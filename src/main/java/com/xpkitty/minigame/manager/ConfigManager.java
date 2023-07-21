@@ -1,7 +1,8 @@
+// 2023. Author: S.Frynas (XpKitty), e-mail: sebastian.frynas@outlook.com, licence: GNU GPL v3
+
 package com.xpkitty.minigame.manager;
 
 import com.xpkitty.minigame.Minigame;
-import com.xpkitty.minigame.instance.GameType;
 import com.xpkitty.minigame.instance.game.CornerType;
 import com.xpkitty.minigame.instance.game.GameSubtype;
 import com.xpkitty.minigame.instance.game.bedwars.Generator;

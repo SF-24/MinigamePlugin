@@ -1,3 +1,5 @@
+// 2023. Author: S.Frynas (XpKitty), e-mail: sebastian.frynas@outlook.com, licence: GNU GPL v3
+
 package com.xpkitty.minigame.kit.type;
 
 import com.xpkitty.minigame.Minigame;
@@ -14,8 +16,6 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.UUID;
-
-import static com.xpkitty.minigame.kit.KitType.SCOUT;
 
 public class ScoutKit extends Kit {
     public ScoutKit(Minigame minigame, UUID uuid) {

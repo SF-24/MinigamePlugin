@@ -1,16 +1,15 @@
+// 2023. Author: S.Frynas (XpKitty), e-mail: sebastian.frynas@outlook.com, licence: GNU GPL v3
+
+
 package com.xpkitty.minigame.kit.type;
 
 import com.xpkitty.minigame.Minigame;
 import com.xpkitty.minigame.kit.Kit;
 import com.xpkitty.minigame.kit.KitType;
-import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.PotionMeta;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 
 import java.util.UUID;
 
