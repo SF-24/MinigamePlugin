@@ -12,6 +12,7 @@ Arena data is stored in config.
 
 ```yaml
 welcome-message: 'Welcome to the server! :)'
+current-season: 1
 required-players: 2
 maximum-players: 8
 countdown-seconds: 120
@@ -44,6 +45,7 @@ arenas:
 ```
 
 the ```welcome-message``` will be show to anyone joining the server.\
+```current-season`` per player statistics data is stored seperately for each season
 ```required-players``` and ```max-players``` are the minimum and maximum amount of players, who can play a mini-game\
 ```countdown-seconds``` default countdown seconds for a mini-game. Get reduced when the game is full or most/all players on the server are playing\
 ```lobby-spawn``` the spawn players are teleported to when joining or leaving a game\
