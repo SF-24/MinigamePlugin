@@ -37,12 +37,10 @@ public class ArenaCommand implements CommandExecutor {
 
                 for(Arena arena : minigame.getArenaManager().getArenas()) {
 
-                    int playercount = 0;
+                    int playerCount;
                     if(arena.getPlayers()!= null){
-                        playercount = arena.getPlayers().size();
-                    } else {
-                        playercount = 0;
-                    }
+                        playerCount = arena.getPlayers().size();
+                    } else playerCount = 0;
 
                     // may be errors, may require toString()
                     System.out.println("-" + arena.getId() + " (" + arena.getState().name() + ")");
@@ -52,11 +50,11 @@ public class ArenaCommand implements CommandExecutor {
                     if(arena.getPlayers().size() != 1) {endln = "s.";} else {endln = ".";}
 
                     if(arena.getState() == GameState.RECRUITING){
-                        player.sendMessage(ChatColor.GREEN + "-" + arena.getId() + " " + gameName + " (" + arena.getState().name() + "), " + playercount + " player" + endln);
+                        player.sendMessage(ChatColor.GREEN + "-" + arena.getId() + " " + gameName + " (" + arena.getState().name() + "), " + playerCount + " player" + endln);
                     } else if(arena.getState() == GameState.COUNTDOWN) {
-                        player.sendMessage(ChatColor.YELLOW + "-" + arena.getId() + " " + gameName + " (" + arena.getState().name() + "), " + playercount + " player" + endln);
+                        player.sendMessage(ChatColor.YELLOW + "-" + arena.getId() + " " + gameName + " (" + arena.getState().name() + "), " + playerCount + " player" + endln);
                     } else if(arena.getState() == GameState.ENDED) {
-                        player.sendMessage(ChatColor.GOLD + "-" + arena.getId() + " " + gameName + " (" + arena.getState().name() + "), " + playercount + " player" + endln);
+                        player.sendMessage(ChatColor.GOLD + "-" + arena.getId() + " " + gameName + " (" + arena.getState().name() + "), " + playerCount + " player" + endln);
                     } else {
                         player.sendMessage(ChatColor.RED + "-" + arena.getId() + " " + gameName + " (" + arena.getState().name() + ")");
                     }

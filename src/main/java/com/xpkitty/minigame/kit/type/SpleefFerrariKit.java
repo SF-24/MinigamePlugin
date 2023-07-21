@@ -34,11 +34,13 @@ public class SpleefFerrariKit extends Kit {
         ItemStack potion = new ItemStack(Material.POTION);
         PotionMeta potionMeta = (PotionMeta) potion.getItemMeta();
         PotionEffect effect = new PotionEffect(PotionEffectType.SPEED, 30, 0, true, false, true);
+        assert potionMeta != null;
         potionMeta.addCustomEffect(effect, true);
         potionMeta.setDisplayName(ChatColor.WHITE + "Potion of Swiftness (30:00)");
         potion.setItemMeta(potionMeta);
 
         ItemMeta shovelMeta = shovel.getItemMeta();
+        assert shovelMeta != null;
         shovelMeta.setUnbreakable(true);
         shovelMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
         shovelMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);

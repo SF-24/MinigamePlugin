@@ -52,9 +52,10 @@ public class KnockoutGame extends Game {
 
 
         for(UUID uuid : arena.getPlayers()) {
-            Bukkit.getPlayer(uuid).setHealth(20);
-            Bukkit.getPlayer(uuid).setFoodLevel(20);
-            for(PotionEffect effect: Bukkit.getPlayer(uuid).getActivePotionEffects()) { Bukkit.getPlayer(uuid).removePotionEffect(effect.getType()); }
+            Player uuidPlayer = Bukkit.getPlayer(uuid);
+            uuidPlayer.setHealth(20);
+            uuidPlayer.setFoodLevel(20);
+            for(PotionEffect effect: uuidPlayer.getActivePotionEffects()) { uuidPlayer.removePotionEffect(effect.getType()); }
         }
         player.sendTitle(ChatColor.GREEN + "VICTORY","",10,100,10);
         player.sendMessage(ChatColor.GOLD + "+" + coinsForWin + " coins");
@@ -101,6 +102,7 @@ public class KnockoutGame extends Game {
 
         ItemStack knockback = new ItemStack(Material.STICK);
         ItemMeta knockbackMeta = knockback.getItemMeta();
+        assert knockbackMeta != null;
         knockbackMeta.addEnchant(Enchantment.KNOCKBACK, 1, true);
         knockbackMeta.setDisplayName(ChatColor.GOLD.toString() + ChatColor.BOLD + "Knockback Stick");
         knockback.setItemMeta(knockbackMeta);
@@ -125,9 +127,7 @@ public class KnockoutGame extends Game {
 
 
                 if(alivePlayers.contains(e.getEntity().getUniqueId())) {
-                    Bukkit.getScheduler().runTaskLater(minigame, () -> {
-                        e.getEntity().teleport(arena.getRespawn());
-                    }, 20);
+                    Bukkit.getScheduler().runTaskLater(minigame, () -> e.getEntity().teleport(arena.getRespawn()), 20);
                 }
 
                 alivePlayers.remove(e.getEntity().getUniqueId());

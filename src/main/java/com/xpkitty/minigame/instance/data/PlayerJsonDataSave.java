@@ -24,13 +24,13 @@ public class PlayerJsonDataSave {
         this.minigame = minigame;
 
         try {
-            initiateFile(player.getUniqueId() + ".json", minigame);
+            initiateFile(player.getUniqueId() + ".json");
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void initiateFile(String name, Minigame minigame) throws Exception {
+    private void initiateFile(String name) {
 
         String path = "plugins" + File.separator + "Minigame" + File.separator + "PlayerData";
         System.out.println("PATH: " + path);
@@ -105,10 +105,7 @@ public class PlayerJsonDataSave {
         // add kits
         HashMap<KitType, Boolean> map = new HashMap<>();
         for(KitType element : KitType.values()) {
-            boolean val = false;
-            if(element.getPrice()<=0) {
-                val = true;
-            }
+            boolean val = element.getPrice() <= 0;
 
             map.put(element, val);
         }

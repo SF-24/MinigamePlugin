@@ -22,6 +22,7 @@ public class KnightKit extends Kit {
     public void onStart(Player player) {
         ItemStack sword = new ItemStack(Material.STONE_SWORD);
         ItemMeta swordMeta = sword.getItemMeta();
+        assert swordMeta != null;
         swordMeta.setUnbreakable(true);
         sword.setItemMeta(swordMeta);
 

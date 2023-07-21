@@ -73,6 +73,7 @@ public class BedWarsGame extends Game {
             Player player = Bukkit.getPlayer(uuid);
 
             // send empty title
+            assert player != null;
             player.sendTitle("","");
 
             // tp player to their base and set gamemode to survival mode
@@ -413,6 +414,7 @@ public class BedWarsGame extends Game {
         // send bed destroyed message
         for(UUID uuid : arena.getPlayers()) {
             Player player1 = Bukkit.getPlayer(uuid);
+            assert player1 != null;
             if(arena.getPlayerTeam(player1).equals(team)) {
                 player1.sendTitle(ChatColor.RED + "BED DESTROYED!","You will no longer respawn!");
                 player1.playSound(player1.getLocation(),Sound.ENTITY_ENDER_DRAGON_GROWL,1.0f,1.0f);
@@ -573,7 +575,7 @@ public class BedWarsGame extends Game {
     void showTopKills() {
 
         HashMap<String, Integer> playerKillsByName = new HashMap<>();
-        Integer playerKillsLength = 0;
+        int playerKillsLength = 0;
 
         List<String> topKills;
 

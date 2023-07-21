@@ -50,7 +50,7 @@ public class UIListener implements Listener {
 
         if(e.getView().getTitle().contains("Player Statistics")) {
             e.setCancelled(true);
-        } else if(e.getView().getTitle().contains("Kit selection") && e.getInventory() != null && e.getCurrentItem() != null) {
+        } else if(e.getView().getTitle().contains("Kit selection") && e.getCurrentItem() != null) {
             e.setCancelled(true);
 
             KitType type = KitType.valueOf(e.getCurrentItem().getItemMeta().getLocalizedName());
@@ -94,7 +94,7 @@ public class UIListener implements Listener {
             }
 
 
-        } else if(e.getView().getTitle().contains("Minigames") && e.getInventory() != null && e.getCurrentItem() != null) {
+        } else if(e.getView().getTitle().contains("Minigames") && e.getCurrentItem() != null) {
 
             e.setCancelled(true);
 
@@ -253,13 +253,10 @@ public class UIListener implements Listener {
                 e.setCancelled(true);
 
                 if(e.getCurrentItem().getItemMeta()!=null) {
-                    switch (e.getCurrentItem().getItemMeta().getLocalizedName()) {
-
-                        default:
-                            return;
-                        case "kits":
-                            new OpenKitMenu((Player) e.getWhoClicked(), minigame, GameType.valueOf(value.name().toUpperCase(Locale.ROOT)));
-                            break;
+                    if ("kits".equals(e.getCurrentItem().getItemMeta().getLocalizedName())) {
+                        new OpenKitMenu((Player) e.getWhoClicked(), minigame, GameType.valueOf(value.name().toUpperCase(Locale.ROOT)));
+                    } else {
+                        return;
                     }
                 }
             }

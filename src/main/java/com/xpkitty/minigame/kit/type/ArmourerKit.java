@@ -22,6 +22,7 @@ public class ArmourerKit extends Kit {
     public void onStart(Player player) {
         ItemStack sword = new ItemStack(Material.WOODEN_SWORD);
         ItemMeta swordMeta = sword.getItemMeta();
+        assert swordMeta != null;
         swordMeta.setUnbreakable(true);
         sword.setItemMeta(swordMeta);
 

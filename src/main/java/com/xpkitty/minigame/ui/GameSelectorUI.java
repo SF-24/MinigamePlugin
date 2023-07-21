@@ -164,7 +164,7 @@ public class GameSelectorUI {
 
                     // set name
                     assert meta != null;
-                    meta.setDisplayName(ChatColor.WHITE + "Arena " + String.valueOf(arena.getId()));
+                    meta.setDisplayName(ChatColor.WHITE + "Arena " + arena.getId());
 
                     // set localized name
                     meta.setLocalizedName("arena_" + arena.getId());

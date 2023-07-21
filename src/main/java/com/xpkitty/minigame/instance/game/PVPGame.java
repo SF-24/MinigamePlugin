@@ -34,7 +34,7 @@ public class PVPGame extends Game {
 
     private static FileConfiguration config;
 
-    HashMap<UUID,Boolean> deadPlayers = new HashMap<UUID, Boolean>();
+    HashMap<UUID,Boolean> deadPlayers = new HashMap<>();
     HashMap<UUID,Integer> playerKills = new HashMap<>();
     ArrayList<UUID> alivePlayers = new ArrayList<>();
     Minigame minigame;
@@ -73,9 +73,10 @@ public class PVPGame extends Game {
     public void giveWin(Player player) {
 
         for(UUID uuid : arena.getPlayers()) {
-            Bukkit.getPlayer(uuid).setHealth(20);
-            Bukkit.getPlayer(uuid).setFoodLevel(20);
-            for(PotionEffect effect: Bukkit.getPlayer(uuid).getActivePotionEffects()) { Bukkit.getPlayer(uuid).removePotionEffect(effect.getType()); }
+            Player uuidPlayer = Bukkit.getPlayer(uuid);
+            uuidPlayer.setHealth(20);
+            uuidPlayer.setFoodLevel(20);
+            for(PotionEffect effect: uuidPlayer.getActivePotionEffects()) { uuidPlayer.removePotionEffect(effect.getType()); }
         }
 
         winner = player;
@@ -98,12 +99,14 @@ public class PVPGame extends Game {
         arena.sendMessage("");
 
         HashMap<String, Integer> playerKillsByName = new HashMap<>();
-        Integer playerKillsLength = 0;
+        int playerKillsLength = 0;
 
         List<String> topKills;
 
         for(UUID uuid : playerKills.keySet()) {
-            String name = Bukkit.getPlayer(uuid).getName();
+            Player uuidPlayer = Bukkit.getPlayer(uuid);
+            assert uuidPlayer!=null;
+            String name = uuidPlayer.getName();
 
             playerKillsByName.put(name, playerKills.get(uuid));
             playerKillsLength++;
@@ -138,6 +141,7 @@ public class PVPGame extends Game {
             alivePlayers.add(uuid);
 
             Player player = Bukkit.getPlayer(uuid);
+            assert player != null;
             player.setHealth(20);
             player.setFoodLevel(20);
             playerKills.put(uuid, 0);
@@ -160,8 +164,7 @@ public class PVPGame extends Game {
         if(e.getEntityType().equals(EntityType.PLAYER)) {
 
             Player player = (Player) e.getEntity();
-            if(player.getHealth()<1) {
-            }
+            player.getHealth();
         }
     }
 

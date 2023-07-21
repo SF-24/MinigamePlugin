@@ -14,6 +14,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Locale;
 
 public class KitUI {
@@ -26,8 +27,9 @@ public class KitUI {
         for(KitType type: KitType.values()) {
             ItemStack is = new ItemStack(type.getMaterial());
             ItemMeta isMeta = is.getItemMeta();
+            assert isMeta != null;
             isMeta.setDisplayName(type.getDisplay());
-            isMeta.setLore(Arrays.asList(ChatColor.WHITE + type.getDescription()));
+            isMeta.setLore(Collections.singletonList(ChatColor.WHITE + type.getDescription()));
             isMeta.setLocalizedName(type.name());
             isMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
             isMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);

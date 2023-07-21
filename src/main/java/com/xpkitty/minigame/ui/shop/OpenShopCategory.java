@@ -15,13 +15,14 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Locale;
 
 public class OpenShopCategory {
 
     Material kitIconMaterial = Material.CHEST;
     String kitIconName = ChatColor.AQUA + "Kits";
-    ArrayList<String> kitIconLore = new ArrayList<>(Arrays.asList(ChatColor.WHITE + "Click to open kit menu"));
+    ArrayList<String> kitIconLore = new ArrayList<>(Collections.singletonList(ChatColor.WHITE + "Click to open kit menu"));
 
     Material moneyAmountIcon = Material.EMERALD;
     String moneyIconName = ChatColor.WHITE + "Current coins: " + ChatColor.GOLD;
@@ -33,6 +34,7 @@ public class OpenShopCategory {
 
         ItemStack moneyStack = new ItemStack(moneyAmountIcon);
         ItemMeta moneyStackMeta = moneyStack.getItemMeta();
+        assert moneyStackMeta != null;
         moneyStackMeta.setDisplayName(moneyIconName + playerDataSave.getCoins(player, GameType.valueOf(category.name().toUpperCase(Locale.ROOT))));
         moneyStack.setItemMeta(moneyStackMeta);
         ui.addItem(moneyStack);
@@ -43,6 +45,7 @@ public class OpenShopCategory {
 
                 ItemStack kitStack = new ItemStack(kitIconMaterial);
                 ItemMeta kitStackMeta = kitStack.getItemMeta();
+                assert kitStackMeta != null;
                 kitStackMeta.setDisplayName(kitIconName);
                 kitStackMeta.setLore(kitIconLore);
                 kitStackMeta.setLocalizedName("kits");
@@ -51,6 +54,7 @@ public class OpenShopCategory {
 
             } else if(string.equalsIgnoreCase("upgrades")) {
                 //TODO: UPGRADES FOR MINIGAMES
+                System.out.println("TODO: upgrades");
             }
         }
 

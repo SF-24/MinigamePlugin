@@ -22,13 +22,14 @@ public class DefaultPvpKit extends Kit {
     public void onStart(Player player) {
         ItemStack sword = new ItemStack(Material.IRON_SWORD);
         ItemMeta swordMeta = sword.getItemMeta();
+        assert swordMeta != null;
         swordMeta.setUnbreakable(true);
         sword.setItemMeta(swordMeta);
 
         player.getInventory().addItem(sword);
-        player.getInventory().addItem(new ItemStack(Material.IRON_AXE, 1, (short) 240));
         player.getInventory().addItem(new ItemStack(Material.GOLDEN_APPLE, 2));
         player.getInventory().setHelmet(new ItemStack(Material.LEATHER_HELMET));
         player.getInventory().addItem(new ItemStack(Material.COOKED_BEEF, 10));
+        player.getInventory().addItem(new ItemStack(Material.ENDER_PEARL));
     }
 }

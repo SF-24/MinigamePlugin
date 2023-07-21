@@ -17,6 +17,10 @@ import java.util.Collections;
 public class Shop {
 
     public Shop(Player player) {
+        shop(player);
+    }
+
+    public static void shop(Player player) {
         openShop(player,ShopCategory.QUICK_BUY);
     }
 
@@ -27,6 +31,7 @@ public class Shop {
         for(int i=0; i<9; i++) {
             ItemStack grayPane = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
             ItemMeta paneMeta = grayPane.getItemMeta();
+            assert paneMeta != null;
             paneMeta.setDisplayName(ChatColor.WHITE + "");
             grayPane.setItemMeta(paneMeta);
             ui.setItem(i+9,grayPane);
@@ -36,6 +41,7 @@ public class Shop {
         for(ShopCategory category : ShopCategory.values()) {
             ItemStack stack = new ItemStack(category.getIcon());
             ItemMeta meta = stack.getItemMeta();
+            assert meta != null;
             meta.setDisplayName(category.getName());
             meta.setLocalizedName("bwc_"+category.name());
             stack.setItemMeta(meta);
@@ -45,6 +51,7 @@ public class Shop {
             if(category.equals(currentCategory)) {
                 ItemStack greenPane = new ItemStack(Material.LIME_STAINED_GLASS_PANE);
                 ItemMeta paneMeta = greenPane.getItemMeta();
+                assert paneMeta != null;
                 paneMeta.setDisplayName(ChatColor.WHITE + "");
                 greenPane.setItemMeta(paneMeta);
                 ui.setItem(slotId+9,greenPane);
@@ -58,6 +65,7 @@ public class Shop {
                 if(item.getMainSlot()>-1) {
                     ItemStack stack = new ItemStack(item.getMaterial(),item.getCount());
                     ItemMeta meta = stack.getItemMeta();
+                    assert meta != null;
                     meta.setDisplayName(ChatColor.WHITE + item.getName());
 
                     String v = item.getCurrency().getSingular();
@@ -79,6 +87,7 @@ public class Shop {
                 if(item.getCategory().equals(currentCategory)) {
                     ItemStack stack = new ItemStack(item.getMaterial(),item.getCount());
                     ItemMeta meta = stack.getItemMeta();
+                    assert meta != null;
                     meta.setDisplayName(ChatColor.WHITE + item.getName());
 
                     String v = item.getCurrency().getSingular();

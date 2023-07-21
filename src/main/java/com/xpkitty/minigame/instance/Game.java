@@ -39,6 +39,7 @@ public abstract class Game implements Listener {
             Player player = Bukkit.getPlayer(uuid);
 
             // close player inventory
+            assert player != null;
             player.closeInventory();
 
             // fill health and hunger bars

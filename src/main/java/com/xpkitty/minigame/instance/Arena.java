@@ -481,8 +481,7 @@ public class Arena {
 
     public ArrayList<Team> getTeamsList() {
         if(isTeamGame()) {
-            ArrayList<Team> teamList = new ArrayList<>();
-            teamList.addAll(Arrays.asList(Team.values()));
+            ArrayList<Team> teamList = new ArrayList<>(Arrays.asList(Team.values()));
             return teamList;
         }
         return null;

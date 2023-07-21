@@ -143,7 +143,7 @@ public class ArenaManager {
 
     public Arena getArena(World world) {
         String worldName = world.getName();
-        String arenaWorld = "";
+        String arenaWorld;
         for (Arena arena : arenas)
         {
             arenaWorld = arena.getWorld().getName();

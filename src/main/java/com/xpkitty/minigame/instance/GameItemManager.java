@@ -27,20 +27,25 @@ public class GameItemManager {
         ItemStack stack = new ItemStack(material);
         ItemMeta meta = stack.getItemMeta();
         if(material.equals(Material.WOODEN_AXE)||material.equals(Material.WOODEN_PICKAXE)||material.equals(Material.STONE_AXE)) {
+            assert meta != null;
             meta.addEnchant(Enchantment.DIG_SPEED,1,true);
         }
         if(material.equals(Material.IRON_AXE)||material.equals(Material.IRON_PICKAXE)) {
+            assert meta != null;
             meta.addEnchant(Enchantment.DIG_SPEED,2,true);
         }
         if(material.equals(Material.GOLDEN_PICKAXE)) {
+            assert meta != null;
             meta.addEnchant(Enchantment.DAMAGE_ALL,2,true);
         }
         if(material.equals(Material.DIAMOND_AXE)||material.equals(Material.DIAMOND_PICKAXE)||material.equals(Material.GOLDEN_PICKAXE)) {
+            assert meta != null;
             meta.addEnchant(Enchantment.DIG_SPEED,3,true);
         }
         List<Material> armour = Arrays.asList(Material.LEATHER_HELMET,Material.LEATHER_CHESTPLATE,Material.LEATHER_LEGGINGS,Material.LEATHER_BOOTS,Material.GOLDEN_HELMET,Material.GOLDEN_CHESTPLATE,Material.GOLDEN_LEGGINGS,Material.GOLDEN_BOOTS,Material.CHAINMAIL_HELMET,Material.CHAINMAIL_CHESTPLATE,Material.CHAINMAIL_LEGGINGS,Material.CHAINMAIL_BOOTS,Material.IRON_HELMET,Material.IRON_CHESTPLATE,Material.IRON_LEGGINGS,Material.IRON_BOOTS,Material.DIAMOND_HELMET,Material.DIAMOND_CHESTPLATE,Material.DIAMOND_LEGGINGS,Material.DIAMOND_BOOTS,Material.NETHERITE_HELMET,Material.NETHERITE_CHESTPLATE,Material.NETHERITE_LEGGINGS,Material.NETHERITE_BOOTS,Material.TURTLE_HELMET);
         List<Material> tools = Arrays.asList(Material.WOODEN_AXE,Material.WOODEN_PICKAXE,Material.WOODEN_HOE,Material.WOODEN_SWORD,Material.WOODEN_SHOVEL,Material.STONE_AXE,Material.STONE_PICKAXE,Material.STONE_SHOVEL,Material.STONE_HOE, Material.STONE_SWORD, Material.IRON_AXE,Material.IRON_PICKAXE, Material.IRON_SHOVEL,Material.IRON_HOE,Material.IRON_SWORD,Material.GOLDEN_AXE, Material.GOLDEN_PICKAXE,Material.GOLDEN_SHOVEL, Material.GOLDEN_HOE, Material.GOLDEN_SWORD,Material.DIAMOND_AXE, Material.DIAMOND_PICKAXE,Material.DIAMOND_SHOVEL, Material.DIAMOND_HOE,Material.DIAMOND_SWORD,Material.NETHERITE_AXE, Material.NETHERITE_SHOVEL, Material.NETHERITE_PICKAXE, Material.NETHERITE_HOE,Material.NETHERITE_SWORD, Material.SHEARS,Material.FLINT_AND_STEEL);
         if(tools.contains(material) || armour.contains(material)) {
+            assert meta != null;
             meta.setUnbreakable(true);
             meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
         }
@@ -83,6 +88,7 @@ public class GameItemManager {
         } else if(tool.equals(Tool.KNOCKBACK_STICK)) {
             ItemStack stick = new ItemStack(Material.STICK);
             ItemMeta stickMeta = stick.getItemMeta();
+            assert stickMeta != null;
             stickMeta.setDisplayName(ChatColor.WHITE+"Knockback Stick");
             stickMeta.addEnchant(Enchantment.KNOCKBACK, 3, true);
             stick.setItemMeta(stickMeta);
@@ -94,6 +100,7 @@ public class GameItemManager {
     public static ItemStack getUnbreakableDiedArmour(Material material, Player player, Arena arena) {
         ItemStack stack = new ItemStack(material);
         LeatherArmorMeta meta = (LeatherArmorMeta) stack.getItemMeta();
+        assert meta != null;
         meta.setUnbreakable(true);
         meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
         meta.addItemFlags(ItemFlag.HIDE_DYE);
@@ -140,6 +147,7 @@ public class GameItemManager {
         if(utility.equals(Utility.FIREBALL)) {
             ItemStack item = new ItemStack(Material.FIRE_CHARGE);
             ItemMeta meta = item.getItemMeta();
+            assert meta != null;
             meta.setLocalizedName("FIREBALL");
             meta.setDisplayName(ChatColor.WHITE+"Fireball");
             meta.setLore(Collections.singletonList(ChatColor.GRAY + "Right click while holding to shoot"));
@@ -153,6 +161,7 @@ public class GameItemManager {
         // make item stack, meta, set name and colour
         ItemStack potion = new ItemStack(Material.POTION);
         PotionMeta potionMeta = (PotionMeta) potion.getItemMeta();
+        assert potionMeta != null;
         potionMeta.setDisplayName(ChatColor.WHITE + "Potion of " + effectType.getName());
         potionMeta.setColor(Color.fromRGB(224,224,224));
 

@@ -31,7 +31,7 @@ public class OpenKitMenu {
                 kitCount++;
             }
         }
-        int size = 9;
+        int size;
 
         if(kitCount<=9) {
             size = 9;
@@ -60,6 +60,7 @@ public class OpenKitMenu {
 
                 ItemStack kit = new ItemStack(kitType.getMaterial());
                 ItemMeta kitMeta = kit.getItemMeta();
+                assert kitMeta != null;
                 kitMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
                 kitMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
                 kitMeta.addItemFlags(ItemFlag.HIDE_DYE);
@@ -67,7 +68,7 @@ public class OpenKitMenu {
 
                 boolean ownsKit = playerDataSave.getKitOwnershipStatus(kitType, player);
 
-                String ownedLine = "";
+                String ownedLine;
 
                 if(ownsKit) {
                     ownedLine = ChatColor.GREEN + "OWNED";
@@ -80,7 +81,7 @@ public class OpenKitMenu {
                 }
 
                 int price = kitType.getPrice();
-                kitMeta.setLore(new ArrayList<String>(Arrays.asList(ChatColor.GRAY + kitType.getDescription(),"",priceLine + price, ownedLine)));
+                kitMeta.setLore(new ArrayList<>(Arrays.asList(ChatColor.GRAY + kitType.getDescription(), "", priceLine + price, ownedLine)));
                 kitMeta.setLocalizedName(kitType.name());
                 kit.setItemMeta(kitMeta);
                 ui.addItem(kit);

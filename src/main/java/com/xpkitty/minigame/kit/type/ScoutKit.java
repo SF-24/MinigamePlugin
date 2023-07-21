@@ -33,6 +33,7 @@ public class ScoutKit extends Kit {
         ItemStack potion = new ItemStack(Material.POTION);
         PotionMeta potionMeta = (PotionMeta) potion.getItemMeta();
         PotionEffect effect = new PotionEffect(PotionEffectType.SPEED, 600, 1, true, false, true);
+        assert potionMeta != null;
         potionMeta.addCustomEffect(effect, true);
         potionMeta.setColor(Color.AQUA);
         potionMeta.setDisplayName(ChatColor.WHITE + "Potion of Swiftness");

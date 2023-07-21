@@ -7,11 +7,12 @@ import org.bukkit.Material;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 public enum ShopCategories {
 
-    PVP(ChatColor.WHITE + "Duels",Material.IRON_SWORD,ChatColor.GRAY + "Free For All PVP",new ArrayList<String>(Arrays.asList("kits"))),
-    SHOVELSPLEEF(ChatColor.WHITE + "Spleef",Material.DIAMOND_SHOVEL,ChatColor.GRAY + "Your favourite minecraft minigame",new ArrayList<String>(Arrays.asList("kits"))),
+    PVP(ChatColor.WHITE + "Duels",Material.IRON_SWORD,ChatColor.GRAY + "Free For All PVP", new ArrayList<>(Collections.singletonList("kits"))),
+    SHOVELSPLEEF(ChatColor.WHITE + "Spleef",Material.DIAMOND_SHOVEL,ChatColor.GRAY + "Your favourite minecraft minigame", new ArrayList<>(Collections.singletonList("kits"))),
     KNOCKOUT(ChatColor.WHITE + "Knockout",Material.STICK,ChatColor.GRAY + "Just knock.",new ArrayList<>()),
     BEDWARS(ChatColor.WHITE + "BedWars",Material.RED_BED,ChatColor.GRAY + "Bed Destroyed!",new ArrayList<>());
 

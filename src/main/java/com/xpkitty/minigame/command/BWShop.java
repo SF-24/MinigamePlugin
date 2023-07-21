@@ -26,7 +26,7 @@ public class BWShop implements CommandExecutor {
                 if(minigame.getArenaManager().getArena(player)!=null) {
                     if(minigame.getArenaManager().getArena(player).getGame()!=null) {
                         if (minigame.getArenaManager().getArena(player).getGame() instanceof BedWarsGame) {
-                            new Shop(player);
+                            Shop.shop(player);
                         }
                     }
                 }
