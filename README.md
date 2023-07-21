@@ -74,7 +74,7 @@ setup: a floating ring over lava, a bit like in Sumo duels. Can be made of ice.\
 
 
 #### WARNING!
-```SHOVELSPLEEF``` may damage terrain around the arena, because before every game it places snow in a large rectangle. Coordinates cannot yet be changed.\
+```SHOVELSPLEEF``` ```spleef_old``` game-subtype may damage terrain around the arena, because before every game it places snow in a large rectangle. Coordinates cannot yet be changed.\
 I reccomend using only 1 spawn with ```SHOVELSPLEEF```.\
 Otherwise you may run into more bugs. 
 
