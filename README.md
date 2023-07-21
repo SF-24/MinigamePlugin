@@ -23,10 +23,11 @@ lobby-spawn:
   yaw: 180
   pitch: 0
 arenas:
-  0:
+0:
     reset: false
     game: 'PVP'
     world: 'Map0'
+    game-subtype: default
     spawns:
       0:
         x: 0.5
@@ -55,6 +56,7 @@ the ```welcome-message``` will be show to anyone joining the server.\
 ```SHOVELSPLEEF```
 ```KNOCKOUT```
 ```BEDWARS```\
+```game-subtype``` set to default
 \
 ```PVP``` is a normal Free-for-all battle with kits and no respawning\
 setup: just an arena\
@@ -65,7 +67,7 @@ setup: a floating ring over lava, a bit like in Sumo duels. Can be made of ice.\
 ```BEDWARS``` requires a very specific config setup. Game setup will be explained later.\
 \
 ```world``` The world in which the arena is located\
-```spawns``` Possible spawn locations. Selected randomly.\
+```spawns``` Possible spawn locations. Selected randomly for each player. Spawning logic will be rewritten.\
 ```respawn``` Respawn location. Player is teleported there after death\
 
 
@@ -73,6 +75,38 @@ setup: a floating ring over lava, a bit like in Sumo duels. Can be made of ice.\
 ```SHOVELSPLEEF``` may damage terrain around the arena, because before every game it places snow in a large rectangle. Coordinates cannot yet be changed.\
 I reccomend using only 1 spawn with ```SHOVELSPLEEF```.\
 Otherwise you may run into more bugs. 
+
+### Spleef file configuration
+```2:
+    reset: false
+    game: 'SHOVELSPLEEF'
+    world: 'Map1'
+    game-subtype: default
+    spawns:
+      0:
+        x: 1000.5
+        y: 115.0
+        z: 1000.5
+        yaw: 0
+        pitch: 0
+    corners:
+      1:
+        x: 1025
+        y: 114
+        z: 1025
+      0:
+        x: 975
+        y: 120
+        z: 975
+    respawn:
+      x: 1000
+      y: 150
+      z: 1000
+      yaw: 180
+      pitch: 0
+```
+
+```corners``` The corners of the arena. The lowest ```Y``` layer will be replaced by snow. Players cannot place blocks outside this area
 
 ### BedWars file configuration
 ```yaml
