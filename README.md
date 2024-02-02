@@ -1,11 +1,11 @@
 # MinigamePlugin
 
-The minigame plugins goal is to create playable minigames in Minecraft\
-Build with maven
+The goal of this plugin is to create playable minigames in Minecraft\
+Build the project with maven
 
 ## Installation
 
-Place built ```.jar``` file in the ```plugins``` folder of your ```spigot``` (or any spigot fork) server.
+Place built ```.jar``` file in the ```plugins``` folder of your ```spigot``` (or any spigot fork) Minecraft server.
 
 ## Usage
 Arena data is stored in config.
@@ -51,6 +51,8 @@ the ```welcome-message``` will be show to anyone joining the server.\
 ```lobby-spawn``` the spawn players are teleported to when joining or leaving a game\
 ```arenas``` a list of arenas
 
+to view your current coordinates in minecraft press ```F3``` or ```Fn + F3```
+
 ### Arena configuration
 ```reset``` currently mostly unused - set to false\
 ```game``` the type of game, there are 4:\
@@ -63,7 +65,7 @@ the ```welcome-message``` will be show to anyone joining the server.\
 ```PVP``` is a normal Free-for-all battle with kits and no respawning\
 setup: just an arena\
 ```SHOVELSPLEEF``` is Spleef, where you mine under other players to knock them in lava.\
-setup: really hard to set up. Run the game once, and build the arena to the shape of the snow blocks. Add lava under them.\
+setup: ~~really hard to set up. Run the game once, and build the arena to the shape of the snow blocks. Add lava under them.~~ the setup is different than most other minigames. \
 ```KNOCKOUT``` in knockout you hit other players with a stick to knock them in lava\
 setup: a floating ring over lava, a bit like in Sumo duels. Can be made of ice.\
 ```BEDWARS``` requires a very specific config setup. Game setup will be explained later.\
@@ -76,7 +78,7 @@ setup: a floating ring over lava, a bit like in Sumo duels. Can be made of ice.\
 #### WARNING!
 ```SHOVELSPLEEF``` ```spleef_old``` game-subtype may damage terrain around the arena, because before every game it places snow in a large rectangle. Coordinates cannot yet be changed.\
 I reccomend using only 1 spawn with ```SHOVELSPLEEF``` when using this subtype.\
-Otherwise you may run into more bugs. 
+Otherwise you may run into more bugs. Using the ```default``` subtype allows changing the coordinates of the area\
 
 ### Spleef file configuration
 ```2:
