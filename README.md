@@ -3,6 +3,21 @@
 The goal of this plugin is to create playable minigames in Minecraft\
 Build the project with maven
 
+## TODO: Coming soon
+Feel free to send me suggestions for new features\
+\
+Planned features:\
+More minigames:\
+Party games\
+TNT Run\
+SkyWars\
+Zombies\
+\
+Improve Knockout\
+Fix bugs\
+Add party system\
+\
+
 ## Installation
 
 Place built ```.jar``` file in the ```plugins``` folder of your ```spigot``` (or any spigot fork) Minecraft server.
@@ -65,7 +80,7 @@ to view your current coordinates in minecraft press ```F3``` or ```Fn + F3```
 ```PVP``` is a normal Free-for-all battle with kits and no respawning\
 setup: just an arena\
 ```SHOVELSPLEEF``` is Spleef, where you mine under other players to knock them in lava.\
-setup: ~~really hard to set up. Run the game once, and build the arena to the shape of the snow blocks. Add lava under them.~~ the setup is different than most other minigames. \
+setup: ~~really hard to set up. Run the game once, and build the arena to the shape of the snow blocks. Add lava under them.~~ the setup is different than most other minigames. I have specified it below, under ```Spleef file configuration```\
 ```KNOCKOUT``` in knockout you hit other players with a stick to knock them in lava\
 setup: a floating ring over lava, a bit like in Sumo duels. Can be made of ice.\
 ```BEDWARS``` requires a very specific config setup. Game setup will be explained later.\
@@ -199,7 +214,7 @@ There are 3 types: ```base```, ```diamond``` and ```emerald```\
 
 #### BedWars item shop
 Currently this plugin does not yet spawn an npc. To create the item shop use a plugin like [```Citizens```](https://github.com/CitizensDev/Citizens2/) or [```zNpcs```](https://github.com/gonalez/znpcs) to create an npc. The item shop can be opened with the command: ```/shop bw```. This command can only be run by people with operator permissions in a BedWars arena\
-Attach the command to an npc and make it run as the player that clicked it.
+Attach the command to an npc and make it run as the player that clicked it with an override to allow operator permissions.
 
 ## Usage and commands
 In game, use ```/arena``` to view arena command help.\
