@@ -1,11 +1,11 @@
 # MinigamePlugin
 
-The minigame plugins goal is to create playable minigames in Minecraft\
-Build with maven
+The goal of this plugin is to create playable minigames in Minecraft\
+Build the project with maven
 
 ## Installation
 
-Place built ```.jar``` file in the ```plugins``` folder of your ```spigot``` (or any spigot fork) server.
+Place built ```.jar``` file in the ```plugins``` folder of your ```spigot``` (or any spigot fork) Minecraft server.
 
 ## Usage
 Arena data is stored in config.
@@ -50,6 +50,8 @@ the ```welcome-message``` will be show to anyone joining the server.\
 ```countdown-seconds``` default countdown seconds for a mini-game. Get reduced when the game is full or most/all players on the server are playing\
 ```lobby-spawn``` the spawn players are teleported to when joining or leaving a game\
 ```arenas``` a list of arenas
+
+to view your current coordinates in minecraft press ```F3``` or ```Fn + F3```
 
 ### Arena configuration
 ```reset``` currently mostly unused - set to false\
