@@ -16,7 +16,6 @@ Zombies\
 Improve Knockout\
 Fix bugs\
 Add party system\
-\
 
 ## Installation
 
