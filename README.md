@@ -1,17 +1,32 @@
 # MinigamePlugin
 
-The minigame plugins goal is to create playable minigames in Minecraft\
-Build with maven
+The goal of this plugin is to create playable minigames in Minecraft\
+Build the project with maven
+
+## TODO: Coming soon
+Feel free to send me suggestions for new features\
+\
+Planned features:\
+More minigames:\
+Party games\
+TNT Run\
+SkyWars\
+Zombies\
+\
+Improve Knockout\
+Fix bugs\
+Add party system\
 
 ## Installation
 
-Place built ```.jar``` file in the ```plugins``` folder of your ```spigot``` (or any spigot fork) server.
+Place built ```.jar``` file in the ```plugins``` folder of your ```spigot``` (or any spigot fork) Minecraft server.
 
 ## Usage
 Arena data is stored in config.
 
 ```yaml
 welcome-message: 'Welcome to the server! :)'
+current-season: 1
 required-players: 2
 maximum-players: 8
 countdown-seconds: 120
@@ -23,10 +38,11 @@ lobby-spawn:
   yaw: 180
   pitch: 0
 arenas:
-  0:
+0:
     reset: false
     game: 'PVP'
     world: 'Map0'
+    game-subtype: default
     spawns:
       0:
         x: 0.5
@@ -43,10 +59,13 @@ arenas:
 ```
 
 the ```welcome-message``` will be show to anyone joining the server.\
+```current-season``` per player statistics data is stored seperately for each season\
 ```required-players``` and ```max-players``` are the minimum and maximum amount of players, who can play a mini-game\
 ```countdown-seconds``` default countdown seconds for a mini-game. Get reduced when the game is full or most/all players on the server are playing\
 ```lobby-spawn``` the spawn players are teleported to when joining or leaving a game\
 ```arenas``` a list of arenas
+
+to view your current coordinates in minecraft press ```F3``` or ```Fn + F3```
 
 ### Arena configuration
 ```reset``` currently mostly unused - set to false\
@@ -55,24 +74,57 @@ the ```welcome-message``` will be show to anyone joining the server.\
 ```SHOVELSPLEEF```
 ```KNOCKOUT```
 ```BEDWARS```\
+```game-subtype``` set to default
 \
 ```PVP``` is a normal Free-for-all battle with kits and no respawning\
 setup: just an arena\
 ```SHOVELSPLEEF``` is Spleef, where you mine under other players to knock them in lava.\
-setup: really hard to set up. Run the game once, and build the arena to the shape of the snow blocks. Add lava under them.\
+setup: ~~really hard to set up. Run the game once, and build the arena to the shape of the snow blocks. Add lava under them.~~ the setup is different than most other minigames. I have specified it below, under ```Spleef file configuration```\
 ```KNOCKOUT``` in knockout you hit other players with a stick to knock them in lava\
 setup: a floating ring over lava, a bit like in Sumo duels. Can be made of ice.\
 ```BEDWARS``` requires a very specific config setup. Game setup will be explained later.\
 \
 ```world``` The world in which the arena is located\
-```spawns``` Possible spawn locations. Selected randomly.\
+```spawns``` Possible spawn locations. Selected randomly for each player. Spawning logic will be rewritten.\
 ```respawn``` Respawn location. Player is teleported there after death\
 
 
 #### WARNING!
-```SHOVELSPLEEF``` may damage terrain around the arena, because before every game it places snow in a large rectangle. Coordinates cannot yet be changed.\
-I reccomend using only 1 spawn with ```SHOVELSPLEEF```.\
-Otherwise you may run into more bugs. 
+```SHOVELSPLEEF``` ```spleef_old``` game-subtype may damage terrain around the arena, because before every game it places snow in a large rectangle. Coordinates cannot yet be changed.\
+I reccomend using only 1 spawn with ```SHOVELSPLEEF``` when using this subtype.\
+Otherwise you may run into more bugs. Using the ```default``` subtype allows changing the coordinates of the area\
+
+### Spleef file configuration
+```2:
+    reset: false
+    game: 'SHOVELSPLEEF'
+    world: 'Map1'
+    game-subtype: default
+    spawns:
+      0:
+        x: 1000.5
+        y: 115.0
+        z: 1000.5
+        yaw: 0
+        pitch: 0
+    corners:
+      1:
+        x: 1025
+        y: 114
+        z: 1025
+      0:
+        x: 975
+        y: 120
+        z: 975
+    respawn:
+      x: 1000
+      y: 150
+      z: 1000
+      yaw: 180
+      pitch: 0
+```
+
+```corners``` The corners of the arena. The lowest ```Y``` layer will be replaced by snow. Players cannot place blocks outside this area
 
 ### BedWars file configuration
 ```yaml
@@ -161,7 +213,7 @@ There are 3 types: ```base```, ```diamond``` and ```emerald```\
 
 #### BedWars item shop
 Currently this plugin does not yet spawn an npc. To create the item shop use a plugin like [```Citizens```](https://github.com/CitizensDev/Citizens2/) or [```zNpcs```](https://github.com/gonalez/znpcs) to create an npc. The item shop can be opened with the command: ```/shop bw```. This command can only be run by people with operator permissions in a BedWars arena\
-Attach the command to an npc and make it run as the player that clicked it.
+Attach the command to an npc and make it run as the player that clicked it with an override to allow operator permissions.
 
 ## Usage and commands
 In game, use ```/arena``` to view arena command help.\
