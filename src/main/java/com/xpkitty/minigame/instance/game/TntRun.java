@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class ShovelSpleef extends Game {
+public class TntRun extends Game {
 
     List<UUID> alivePlayers = new ArrayList<>();
     Minigame minigame;
@@ -41,7 +41,7 @@ public class ShovelSpleef extends Game {
     Player winner;
 
 
-    public ShovelSpleef(Minigame minigame, Arena arena, ConnectListener connectListener) {
+    public TntRun(Minigame minigame, Arena arena, ConnectListener connectListener) {
         super(minigame, arena, connectListener);
 
         this.connectListener = connectListener;
@@ -49,8 +49,8 @@ public class ShovelSpleef extends Game {
     }
 
 
-     public void giveWin(Player player) {
-         resetArena(true);
+    public void giveWin(Player player) {
+        resetArena(true);
 
         for(UUID uuid : arena.getPlayers()) {
             Player uuidPlayer = Bukkit.getPlayer(uuid);
@@ -78,11 +78,11 @@ public class ShovelSpleef extends Game {
         arena.sendMessage(ChatColor.GOLD + player.getName() + " HAS WON!" + " Thanks for playing.");
         arena.clearInventory();
 
-         Bukkit.getScheduler().runTaskLater(minigame, () -> {
-             arena.sendMessage(ChatColor.GOLD + "Game has ended. You have been moved to lobby");
-             arena.sendTitle("","");
-             arena.reset(false, 0);
-         }, 300);
+        Bukkit.getScheduler().runTaskLater(minigame, () -> {
+            arena.sendMessage(ChatColor.GOLD + "Game has ended. You have been moved to lobby");
+            arena.sendTitle("","");
+            arena.reset(false, 0);
+        }, 300);
     }
 
     @Override

@@ -67,7 +67,7 @@ public class PregameListener implements Listener {
         Player player = e.getPlayer();
         Arena arena = minigame.getArenaManager().getArena(player);
         if(arena!=null) {
-            if(!arena.getState().equals(GameState.LIVE)) {
+            if(!arena.getState().equals(GameState.LIVE) && arena.getPlayers().contains(player.getUniqueId())) {
                 e.setCancelled(true);
             }
         }

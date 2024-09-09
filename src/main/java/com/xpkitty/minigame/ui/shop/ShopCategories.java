@@ -13,6 +13,7 @@ public enum ShopCategories {
 
     PVP(ChatColor.WHITE + "Duels",Material.IRON_SWORD,ChatColor.GRAY + "Free For All PVP", new ArrayList<>(Collections.singletonList("kits"))),
     SHOVELSPLEEF(ChatColor.WHITE + "Spleef",Material.DIAMOND_SHOVEL,ChatColor.GRAY + "Your favourite minecraft minigame", new ArrayList<>(Collections.singletonList("kits"))),
+    TNTRUN(ChatColor.WHITE+"TNT Run", Material.TNT, ChatColor.GRAY+"RUN!",new ArrayList<>()),
     KNOCKOUT(ChatColor.WHITE + "Knockout",Material.STICK,ChatColor.GRAY + "Just knock.",new ArrayList<>()),
     BEDWARS(ChatColor.WHITE + "BedWars",Material.RED_BED,ChatColor.GRAY + "Bed Destroyed!",new ArrayList<>());
 
