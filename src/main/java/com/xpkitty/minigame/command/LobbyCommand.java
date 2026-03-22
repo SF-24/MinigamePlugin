@@ -34,7 +34,9 @@ public class LobbyCommand implements CommandExecutor {
                 arena.removePlayer(player);
             } else {
                 player.sendMessage(ChatColor.RED + "You are now in the lobby");
-                Minigame.giveLobbyItems(player);
+                if(ConfigManager.getGiveLobbyCompassOnJoin()) {
+                    Minigame.giveLobbyItems(player);
+                }
             }
         }
 

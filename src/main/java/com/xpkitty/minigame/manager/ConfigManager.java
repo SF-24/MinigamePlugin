@@ -12,6 +12,7 @@ import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
@@ -24,6 +25,18 @@ public class ConfigManager {
         minigame.saveDefaultConfig();
     }
 
+    public static boolean getSendWelcomeMessage() {return config.getBoolean("send-welcome-message");}
+
+    public static boolean getGiveLobbyCompassOnJoin() {return config.getBoolean("give-lobby-compass-on-join");}
+
+    public static boolean getClearInventoryOnJoin() {return config.getBoolean("clear-inventory-on-join");}
+
+    public static boolean getTeleportToLobbyOnJoin() {return config.getBoolean("lobby-spawn.teleport-on-join");}
+
+    public static boolean getTeleportToLobbyOnArenaQuit() {return config.getBoolean("teleport-on-arena-quit");}
+
+    public static List<String> getDisabledWorlds() {return config.getStringList("disabled-worlds");}
+
     public static int getCurrentSeason() {return config.getInt("current-season");}
 
     public static int getRequiredPlayers() { return config.getInt("required-players"); }
@@ -32,7 +45,7 @@ public class ConfigManager {
 
     public static int getCountdownSeconds() { return config.getInt("countdown-seconds"); }
 
-    public static String getMessage() { return config.getString("welcome-message"); }
+    public static String getWelcomeMessage() { return config.getString("welcome-message"); }
 
     public static GameSubtype getGameSubtype(int arenaId) { return GameSubtype.valueOf(Objects.requireNonNull(config.getString("arenas." + arenaId + ".game-subtype")).toUpperCase(Locale.ROOT));}
 

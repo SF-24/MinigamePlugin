@@ -65,10 +65,9 @@ public class GameSelectorUI {
 
                 // Set hide flags
                 itemMeta.addItemFlags(ItemFlag.HIDE_DYE);
-                itemMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+                itemMeta.addItemFlags(ItemFlag.HIDE_ADDITIONAL_TOOLTIP);
                 itemMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
                 itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-                itemMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
                 itemMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
 
                 // set localized name

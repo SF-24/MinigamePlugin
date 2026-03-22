@@ -20,8 +20,6 @@ import java.util.UUID;
 
 public class ConnectListener implements Listener {
 
-
-
     private final HashMap<UUID, PlayerDataSave> dataSaveList = new HashMap<>();
     public Minigame minigame;
 
@@ -34,17 +32,16 @@ public class ConnectListener implements Listener {
 
         Player player = e.getPlayer();
 
-        ArrayList<String> disabledWorlds = new ArrayList<>();
-
-        disabledWorlds.add("CityLife");
-        disabledWorlds.add("Flat");
-        disabledWorlds.add("Bobby");
-        disabledWorlds.add("Utumno");
-
-        if(!disabledWorlds.contains(player.getWorld().getName())) {
-            player.sendMessage(ChatColor.GREEN + ConfigManager.getMessage());
-            player.teleport(ConfigManager.getLobbySpawn());
-            Minigame.giveLobbyItems(player);
+        if(!ConfigManager.getDisabledWorlds().contains(player.getWorld().getName())) {
+            if(ConfigManager.getSendWelcomeMessage()) {
+                player.sendMessage(ChatColor.GREEN + ConfigManager.getWelcomeMessage());
+            }
+            if(ConfigManager.getTeleportToLobbyOnJoin()) {
+                player.teleport(ConfigManager.getLobbySpawn());
+            }
+            if(ConfigManager.getGiveLobbyCompassOnJoin()) {
+                Minigame.giveLobbyItems(player);
+            }
         }
         PlayerDataSave instance = new PlayerDataSave(player, minigame);
 

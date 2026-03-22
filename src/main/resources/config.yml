@@ -1,4 +1,7 @@
 welcome-message: 'Welcome to the server! :)'
+send-welcome-message: false
+give-lobby-compass-on-join: false
+clear-inventory-on-join: false
 current-season: 1
 required-players: 2
 maximum-players: 8
@@ -10,6 +13,8 @@ lobby-spawn:
   z: 0.5
   yaw: 180
   pitch: 0
+  teleport-on-join: true
+  teleport-on-arena-quit: true
 arenas:
   0:
     reset: false

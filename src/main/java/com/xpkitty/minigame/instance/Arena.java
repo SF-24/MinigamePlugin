@@ -2,6 +2,8 @@
 
 package com.xpkitty.minigame.instance;
 
+import com.mineshaft.mineshaftapi.events.MineshaftArenaJoinEvent;
+import com.mineshaft.mineshaftapi.events.MineshaftArenaQuitEvent;
 import com.xpkitty.minigame.GameState;
 import com.xpkitty.minigame.Minigame;
 import com.xpkitty.minigame.instance.game.BlockGame;
@@ -128,7 +130,9 @@ public class Arena {
                     for (PotionEffect effect : player.getActivePotionEffects()) {
                         player.removePotionEffect(effect.getType());
                     }
-                    Minigame.giveLobbyItems(player);
+                    if(ConfigManager.getGiveLobbyCompassOnJoin()) {
+                        Minigame.giveLobbyItems(player);
+                    }
                 }
             }
 
@@ -285,6 +289,8 @@ public class Arena {
     /* PLAYERS */
 
     public void addPlayer(Player player) {
+        MineshaftArenaJoinEvent event = new MineshaftArenaJoinEvent(player,"MinigamePlugin",String.valueOf(id));
+        Bukkit.getPluginManager().callEvent(event);
 
         //get random spawn from list
         Location location = getRandomSpawnLocation();
@@ -372,7 +378,9 @@ public class Arena {
         }
 
         // tp player out and send title
-        player.teleport(ConfigManager.getLobbySpawn());
+        if(ConfigManager.getTeleportToLobbyOnArenaQuit()) {
+            player.teleport(ConfigManager.getLobbySpawn());
+        }
         player.sendTitle("","");
 
         removeTeam(player.getUniqueId());
@@ -403,7 +411,11 @@ public class Arena {
         }
 
         // give lobby items to player
-        Minigame.giveLobbyItems(player);
+        if(ConfigManager.getGiveLobbyCompassOnJoin()) {
+            Minigame.giveLobbyItems(player);
+        }
+        MineshaftArenaQuitEvent event = new MineshaftArenaQuitEvent(player,"MinigamePlugin",String.valueOf(id));
+        Bukkit.getPluginManager().callEvent(event);
     }
 
     /* INFO */

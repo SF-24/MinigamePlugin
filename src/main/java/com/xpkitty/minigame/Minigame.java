@@ -2,6 +2,7 @@
 
 package com.xpkitty.minigame;
 
+import com.mineshaft.mineshaftapi.MineshaftApi;
 import com.xpkitty.minigame.command.ArenaCommand;
 import com.xpkitty.minigame.command.BWShop;
 import com.xpkitty.minigame.command.LobbyCommand;
@@ -22,9 +23,10 @@ import java.util.Collections;
 
 public class Minigame extends JavaPlugin{
 
+    public static Minigame getInstance() {return Minigame.getPlugin(Minigame.class);};
+
     private ArenaManager arenaManager;
     private final ConfigManager configManager = new ConfigManager();
-
 
     @Override
     public void onEnable(){
@@ -56,6 +58,7 @@ public class Minigame extends JavaPlugin{
         player.sendMessage(ChatColor.GOLD + "+" + amount + " coins");
     }
 
+    @SuppressWarnings("removal")
     public static void giveLobbyItems(Player player) {
         ItemStack compass = new ItemStack(Material.COMPASS);
         ItemMeta compassMeta = compass.getItemMeta();
@@ -82,7 +85,9 @@ public class Minigame extends JavaPlugin{
         profileMeta.setLore(Collections.singletonList(ChatColor.GRAY + "Right click when in hand to open profile"));
         profile.setItemMeta(profileMeta);
 
-        player.getInventory().clear();
+        if(ConfigManager.getClearInventoryOnJoin()) {
+            player.getInventory().clear();
+        }
         player.getInventory().setItem(0,compass);
         player.getInventory().setItem(4,shop);
         player.getInventory().setItem(8,profile);
