@@ -2,11 +2,14 @@
 
 package com.xpkitty.minigame;
 
-import com.mineshaft.mineshaftapi.MineshaftApi;
+import com.mineshaft.mineshaftapi.util.ui.UIUtil;
 import com.xpkitty.minigame.command.ArenaCommand;
 import com.xpkitty.minigame.command.BWShop;
 import com.xpkitty.minigame.command.LobbyCommand;
 import com.xpkitty.minigame.instance.Arena;
+import com.xpkitty.minigame.kit.Kit;
+import com.xpkitty.minigame.kit.data_manager.YamlKitCache;
+import com.xpkitty.minigame.kit.data_manager.YamlKitLoader;
 import com.xpkitty.minigame.listener.*;
 import com.xpkitty.minigame.manager.ArenaManager;
 import com.xpkitty.minigame.manager.ConfigManager;
@@ -25,7 +28,9 @@ public class Minigame extends JavaPlugin{
 
     public static Minigame getInstance() {return Minigame.getPlugin(Minigame.class);};
 
+    private YamlKitCache kitCache;
     private ArenaManager arenaManager;
+    private YamlKitLoader kitLoader;
     private final ConfigManager configManager = new ConfigManager();
 
     @Override
@@ -34,6 +39,10 @@ public class Minigame extends JavaPlugin{
 
         ConnectListener listener = new ConnectListener(this);
         arenaManager = new ArenaManager(this, listener);
+
+        // Initialise the cache before the loader, which uses the cache.
+        kitCache = new YamlKitCache();
+        kitLoader = new YamlKitLoader();
 
         Bukkit.getPluginManager().registerEvents(new GameListener(this), this);
         Bukkit.getPluginManager().registerEvents(new UIListener(this), this);
@@ -54,36 +63,40 @@ public class Minigame extends JavaPlugin{
         }
     }
 
+    public void reload() {
+        kitCache.clearCache();
+        kitLoader.initialiseFiles();
+    }
+
     public static void sendCoinsMessage(Player player, int amount) {
         player.sendMessage(ChatColor.GOLD + "+" + amount + " coins");
     }
 
-    @SuppressWarnings("removal")
     public static void giveLobbyItems(Player player) {
         ItemStack compass = new ItemStack(Material.COMPASS);
         ItemMeta compassMeta = compass.getItemMeta();
         assert compassMeta != null;
         compassMeta.setDisplayName(ChatColor.WHITE + "Game Selector");
-        compassMeta.setLocalizedName("lobby_game_selector");
         compassMeta.setLore(Collections.singletonList(ChatColor.GRAY + "Right click when in hand to open game selection"));
         compass.setItemMeta(compassMeta);
+        UIUtil.setOnclick(compass, "lobby_game_selector");
 
         ItemStack shop = new ItemStack(Material.EMERALD);
         ItemMeta shopMeta = shop.getItemMeta();
         assert shopMeta != null;
         shopMeta.setDisplayName(ChatColor.WHITE + "Shop");
-        shopMeta.setLocalizedName("lobby_shop");
         shopMeta.setLore(Collections.singletonList(ChatColor.GRAY + "Right click when in hand to open shop"));
         shop.setItemMeta(shopMeta);
+        UIUtil.setOnclick(shop, "lobby_shop");
 
         ItemStack profile = new ItemStack(Material.PLAYER_HEAD);
         SkullMeta profileMeta = (SkullMeta) profile.getItemMeta();
         assert profileMeta != null;
         profileMeta.setOwningPlayer(player);
         profileMeta.setDisplayName(ChatColor.WHITE + "Profile");
-        profileMeta.setLocalizedName("lobby_profile");
         profileMeta.setLore(Collections.singletonList(ChatColor.GRAY + "Right click when in hand to open profile"));
         profile.setItemMeta(profileMeta);
+        UIUtil.setOnclick(profile, "lobby_profile");
 
         if(ConfigManager.getClearInventoryOnJoin()) {
             player.getInventory().clear();
@@ -95,5 +108,6 @@ public class Minigame extends JavaPlugin{
 
     public ConfigManager getConfigManager() {return configManager; }
     public ArenaManager getArenaManager() { return arenaManager; }
-
+    public YamlKitLoader getKitLoader() { return kitLoader; }
+    public YamlKitCache getKitCache() { return kitCache;}
 }

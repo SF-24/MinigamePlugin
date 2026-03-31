@@ -211,9 +211,9 @@ public class PlayerJsonDataSave {
     }
 
 
-    public boolean getKitOwnershipStatus(KitType kit, Player player) {
+    public boolean getKitOwnershipStatus(String kit, Player player) {
 
-        String kitName = kit.name();
+        String kitName = kit.toLowerCase();
         for(KitType kitType : KitType.values()) {
             if(kitType.name().equalsIgnoreCase(kitName)) {
                 return loadData(minigame, player).getKitStatus(kitType);

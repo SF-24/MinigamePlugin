@@ -116,9 +116,7 @@ public class TntRun extends Game {
             player.closeInventory();
         }
 
-        for(UUID uuid: arena.getKits().keySet()) {
-            arena.getKits().get(uuid).onStart(Bukkit.getPlayer(uuid));
-        }
+        // Don't use kits
     }
 
     @Override

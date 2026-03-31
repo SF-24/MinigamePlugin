@@ -2,6 +2,7 @@
 
 package com.xpkitty.minigame.ui.bedwars;
 
+import com.mineshaft.mineshaftapi.util.ui.UIUtil;
 import com.xpkitty.minigame.ui.bedwars.elements.Item;
 import com.xpkitty.minigame.ui.bedwars.elements.ShopCategory;
 import net.md_5.bungee.api.ChatColor;
@@ -43,8 +44,8 @@ public class Shop {
             ItemMeta meta = stack.getItemMeta();
             assert meta != null;
             meta.setDisplayName(category.getName());
-            meta.setLocalizedName("bwc_"+category.name());
             stack.setItemMeta(meta);
+            UIUtil.setOnclick(stack,"bwc_"+category.name());
             ui.addItem(stack);
 
             // if is open category add green glass pane below
@@ -76,9 +77,8 @@ public class Shop {
                     String lore = item.getCurrency().getColorCode()+item.getPrice()+" "+v;
                     meta.setLore(Collections.singletonList(lore));
 
-                    meta.setLocalizedName(item.name());
-
                     stack.setItemMeta(meta);
+                    UIUtil.setOnclick(stack,item.name());
                     ui.setItem(item.getMainSlot(),stack);
                 }
             }
@@ -98,9 +98,8 @@ public class Shop {
                     String lore = item.getCurrency().getColorCode()+item.getPrice()+" "+v;
                     meta.setLore(Collections.singletonList(lore));
 
-                    meta.setLocalizedName(item.name());
-
                     stack.setItemMeta(meta);
+                    UIUtil.setOnclick(stack,item.name());
                     ui.setItem(item.getSlot(),stack);
                 }
             }

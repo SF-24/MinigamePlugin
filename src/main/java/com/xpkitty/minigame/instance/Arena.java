@@ -32,6 +32,7 @@ public class Arena {
     private final Minigame minigame;
 
     private final int id;
+    private String defaultKit;
     private final HashMap<String,Location> spawns;
     private final HashMap<String, BedLocation> beds;
     private final Location respawn;
@@ -43,7 +44,7 @@ public class Arena {
 
     private GameState state;
     private final List<UUID> players;
-    private final HashMap<UUID, Kit> kits;
+    private final HashMap<UUID, String> kits;
     private final HashMap<UUID, Team> teams;
     private Countdown countdown;
     private Game game;
@@ -72,6 +73,11 @@ public class Arena {
 
         setupNewGame();
         this.canJoin = true;
+    }
+
+    public Arena setDefaultKit(String kit){
+        this.defaultKit=kit;
+        return this;
     }
 
     /* GAME */
@@ -300,7 +306,7 @@ public class Arena {
             player.teleport(location);
             if (getGameType().equals(GameType.PVP)) {
                 player.sendMessage(ChatColor.GOLD + "Choose your kit with /arena kit");
-                setKit(player.getUniqueId(), KitType.PVP_DEFAULT);
+                setDynamicKit(player.getUniqueId(), this.getDefaultKit());
             } else if (getGameType().equals(GameType.SHOVELSPLEEF)) {
                 player.sendMessage(ChatColor.GOLD + "Choose your kit with /arena kit");
                 setKit(player.getUniqueId(), KitType.SPLEEF_DEFAULT);
@@ -422,6 +428,7 @@ public class Arena {
 
     public int getId() { return id; }
     public World getWorld() { return getRandomSpawnLocation().getWorld(); }
+    public String getDefaultKit() { return defaultKit; }
 
     public GameState getState() { return state; }
     public List<UUID> getPlayers() { return players; }
@@ -431,7 +438,7 @@ public class Arena {
     public void toggleCanJoin() { this.canJoin = !this.canJoin; System.out.println("can join: " + canJoin); }
 
     public void setState(GameState state) { this.state = state; }
-    public HashMap<UUID, Kit> getKits() { return kits; }
+    public HashMap<UUID, String> getKits() { return kits; }
     public HashMap<UUID, Team> getTeams() {return teams;}
 
     public GameType getGameType() { return gameType; }
@@ -451,7 +458,6 @@ public class Arena {
 
     public void removeKit(UUID uuid) {
         if(kits.containsKey(uuid)) {
-            kits.get(uuid).remove();
             kits.remove(uuid);
         }
     }
@@ -466,29 +472,34 @@ public class Arena {
         teams.put(uuid,team);
     }
 
+    public void setDynamicKit(UUID uuid, String type) {
+        removeKit(uuid);
+        kits.put(uuid,"dynamic:"+type);
+    }
+
     public void setKit(UUID uuid, KitType type) {
         removeKit(uuid);
-        if(type.equals(KitType.PVP_DEFAULT)) {
-            kits.put(uuid, new DefaultPvpKit(minigame, uuid));
-        } else if(type.equals(KitType.KNIGHT)) {
-            kits.put(uuid, new KnightKit(minigame, uuid));
-        } else if(type.equals(KitType.ARMORER)) {
-            kits.put(uuid, new ArmourerKit(minigame, uuid));
-        } else if(type.equals(KitType.SCOUT)) {
-            kits.put(uuid, new ScoutKit(minigame, uuid));
-        } else if(type.equals(KitType.SPLEEF_DEFAULT)) {
-            kits.put(uuid, new DefaultSpleefKit(minigame, uuid));
-        } else if(type.equals(KitType.ARCHER)) {
-            kits.put(uuid, new ArcherKit(minigame, uuid));
-        } else if(type.equals(KitType.SPLEEF_NOOB)) {
-            kits.put(uuid, new SpleefNoobKit(minigame, uuid));
+//        if(type.equals(KitType.PVP_DEFAULT)) {
+//            kits.put(uuid, new DefaultPvpKit(minigame, uuid));
+//        } else if(type.equals(KitType.KNIGHT)) {
+//            kits.put(uuid, new KnightKit(minigame, uuid));
+//        } else if(type.equals(KitType.ARMORER)) {
+//            kits.put(uuid, new ArmourerKit(minigame, uuid));
+//        } else if(type.equals(KitType.SCOUT)) {
+//            kits.put(uuid, new ScoutKit(minigame, uuid));
+//        } else if(type.equals(KitType.SPLEEF_DEFAULT)) {
+//            kits.put(uuid, new DefaultSpleefKit(minigame, uuid));
+//        } else if(type.equals(KitType.ARCHER)) {
+//            kits.put(uuid, new ArcherKit(minigame, uuid));
+         if(type.equals(KitType.SPLEEF_NOOB)) {
+            kits.put(uuid, "builtin:SPLEEF_NOOB");
         } else if(type.equals(KitType.SPLEEF_FERRARI)) {
-            kits.put(uuid, new SpleefFerrariKit(minigame, uuid));
+            kits.put(uuid, "builtin:SPLEEF_FERRARI");
         }
     }
 
-    public KitType getKitType(Player player) {
-        return kits.containsKey(player.getUniqueId()) ? kits.get(player.getUniqueId()).getType() : null;
+    public String getKitType(Player player) {
+        return kits.containsKey(player.getUniqueId()) ? kits.get(player.getUniqueId()) : null;
     }
 
     public ArrayList<Team> getTeamsList() {

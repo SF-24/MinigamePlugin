@@ -20,6 +20,7 @@ arenas:
     reset: false
     game: 'PVP'
     world: 'Map0'
+    default-kit: 'demo-kit'
     spawns:
       0:
         x: 0.5

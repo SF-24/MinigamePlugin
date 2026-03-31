@@ -2,6 +2,7 @@
 
 package com.xpkitty.minigame.ui.shop;
 
+import com.mineshaft.mineshaftapi.util.ui.UIUtil;
 import com.xpkitty.minigame.Minigame;
 import com.xpkitty.minigame.instance.GameType;
 import com.xpkitty.minigame.instance.data.PlayerDataSave;
@@ -16,7 +17,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Locale;
 
 public class OpenKitMenu {
 
@@ -62,11 +62,11 @@ public class OpenKitMenu {
                 ItemMeta kitMeta = kit.getItemMeta();
                 assert kitMeta != null;
                 kitMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-                kitMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+                kitMeta.addItemFlags(ItemFlag.HIDE_ADDITIONAL_TOOLTIP);
                 kitMeta.addItemFlags(ItemFlag.HIDE_DYE);
                 kitMeta.setDisplayName(kitType.getDisplay());
 
-                boolean ownsKit = playerDataSave.getKitOwnershipStatus(kitType, player);
+                boolean ownsKit = playerDataSave.getKitOwnershipStatus(kitType.name(), player);
 
                 String ownedLine;
 
@@ -82,10 +82,9 @@ public class OpenKitMenu {
 
                 int price = kitType.getPrice();
                 kitMeta.setLore(new ArrayList<>(Arrays.asList(ChatColor.GRAY + kitType.getDescription(), "", priceLine + price, ownedLine)));
-                kitMeta.setLocalizedName(kitType.name());
                 kit.setItemMeta(kitMeta);
                 ui.addItem(kit);
-
+                UIUtil.setOnclick(kit,kitType.name());
             }
         }
 

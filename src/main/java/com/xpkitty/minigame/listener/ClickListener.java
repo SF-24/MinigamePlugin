@@ -2,6 +2,7 @@
 
 package com.xpkitty.minigame.listener;
 
+import com.mineshaft.mineshaftapi.util.ui.UIUtil;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Fireball;
@@ -27,7 +28,7 @@ public class ClickListener implements Listener {
             }
             ItemMeta meta = item.getItemMeta();
             if (meta != null) {
-                String locName = meta.getLocalizedName();
+                String locName = UIUtil.getOnclick(item);
                 if(locName.equalsIgnoreCase("FIREBALL")) {
                     if(item.getAmount()>1) {
                         item.setAmount(item.getAmount()-1);

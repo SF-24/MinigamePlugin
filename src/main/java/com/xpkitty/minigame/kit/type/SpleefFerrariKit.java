@@ -26,7 +26,7 @@ public class SpleefFerrariKit extends Kit {
         super(minigame, KitType.SPLEEF_FERRARI, uuid);
     }
 
-    @Override
+    @Override @SuppressWarnings({"removal"})
     public void onStart(Player player) {
 
         ItemStack snow = new ItemStack(Material.SNOW_BLOCK, 15);
@@ -44,7 +44,7 @@ public class SpleefFerrariKit extends Kit {
         shovelMeta.setUnbreakable(true);
         shovelMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
         shovelMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-        shovelMeta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, new AttributeModifier("damage",-0.99999f, ADD_NUMBER));
+        shovelMeta.addAttributeModifier(Attribute.ATTACK_DAMAGE, new AttributeModifier("damage",-0.99999f, ADD_NUMBER));
         shovel.setItemMeta(shovelMeta);
 
         player.getInventory().addItem(shovel);

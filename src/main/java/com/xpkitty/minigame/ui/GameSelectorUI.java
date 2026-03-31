@@ -2,6 +2,7 @@
 
 package com.xpkitty.minigame.ui;
 
+import com.mineshaft.mineshaftapi.util.ui.UIUtil;
 import com.xpkitty.minigame.GameState;
 import com.xpkitty.minigame.Minigame;
 import com.xpkitty.minigame.instance.Arena;
@@ -70,11 +71,11 @@ public class GameSelectorUI {
                 itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
                 itemMeta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
 
-                // set localized name
-                itemMeta.setLocalizedName("category_" + element.name());
-
                 // apply item meta
                 item.setItemMeta(itemMeta);
+
+                // Set on click
+                UIUtil.setOnclick(item,"category_" + element.name());
 
                 // add to ui
                 ui.setItem(element.getGameSelectorSlot(), item);
@@ -130,11 +131,11 @@ public class GameSelectorUI {
 
                         meta.setLore(Collections.singletonList(ChatColor.GRAY.toString() + players + peoplePlayingString));
 
-                        // set localized name
-                        meta.setLocalizedName("game_" + element.name());
-
                         // apply meta
                         item.setItemMeta(meta);
+
+                        // Set on click
+                        UIUtil.setOnclick(item,"game_" + element.name());
 
                         // add to ui
                         ui.setItem(i,item);
@@ -165,9 +166,6 @@ public class GameSelectorUI {
                     assert meta != null;
                     meta.setDisplayName(ChatColor.WHITE + "Arena " + arena.getId());
 
-                    // set localized name
-                    meta.setLocalizedName("arena_" + arena.getId());
-
                     // set lore (description)
                     ArrayList<String> lore = new ArrayList<>();
                     lore.add(arena.getState().getDisplayName());
@@ -181,6 +179,8 @@ public class GameSelectorUI {
 
                     // apply meta
                     stack.setItemMeta(meta);
+
+                    UIUtil.setOnclick(stack,"arena_" + arena.getId());
 
                     //add to ui
                     ui.setItem(i, stack);

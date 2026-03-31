@@ -8,6 +8,10 @@ import com.xpkitty.minigame.instance.Arena;
 import com.xpkitty.minigame.instance.Game;
 import com.xpkitty.minigame.instance.GameType;
 import com.xpkitty.minigame.instance.data.PlayerDataSave;
+import com.xpkitty.minigame.kit.KitType;
+import com.xpkitty.minigame.kit.type.DefaultSpleefKit;
+import com.xpkitty.minigame.kit.type.SpleefFerrariKit;
+import com.xpkitty.minigame.kit.type.SpleefNoobKit;
 import com.xpkitty.minigame.listener.ConnectListener;
 import com.xpkitty.minigame.manager.ConfigManager;
 import com.xpkitty.minigame.manager.Region;
@@ -117,7 +121,11 @@ public class ShovelSpleef extends Game {
         }
 
         for(UUID uuid: arena.getKits().keySet()) {
-            arena.getKits().get(uuid).onStart(Bukkit.getPlayer(uuid));
+            switch (KitType.valueOf(arena.getKits().get(uuid))) {
+                case SPLEEF_DEFAULT -> new DefaultSpleefKit(Minigame.getInstance(),uuid).onStart(Bukkit.getPlayer(uuid));
+                case SPLEEF_NOOB -> new SpleefNoobKit(Minigame.getInstance(),uuid).onStart(Bukkit.getPlayer(uuid));
+                case SPLEEF_FERRARI -> new SpleefFerrariKit(Minigame.getInstance(),uuid).onStart(Bukkit.getPlayer(uuid));
+            }
         }
     }
 

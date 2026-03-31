@@ -2,14 +2,12 @@
 
 package com.xpkitty.minigame.listener;
 
+import com.mineshaft.mineshaftapi.util.ui.UIUtil;
 import com.xpkitty.minigame.Minigame;
 import com.xpkitty.minigame.instance.Arena;
-import com.xpkitty.minigame.manager.ArenaManager;
 import com.xpkitty.minigame.ui.GameSelectorUI;
 import com.xpkitty.minigame.ui.MainUI;
 import com.xpkitty.minigame.ui.StatisticsUI;
-import com.xpkitty.minigame.ui.bedwars.Shop;
-import com.xpkitty.minigame.ui.shop.OpenShopCategory;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -19,7 +17,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.WorldLoadEvent;
-import org.bukkit.inventory.meta.ItemMeta;
 
 public class GameListener implements Listener {
 
@@ -45,8 +42,7 @@ public class GameListener implements Listener {
     @EventHandler
     public void onItemDrop(PlayerDropItemEvent e) {
         if(e.getItemDrop().getItemStack().getItemMeta()!=null) {
-            ItemMeta itemMeta = e.getItemDrop().getItemStack().getItemMeta();
-            String locName = itemMeta.getLocalizedName();
+            String locName = UIUtil.getOnclick(e.getItemDrop().getItemStack());
             if(locName.contains("lobby_")) {
                 e.setCancelled(true);
             }
@@ -57,7 +53,7 @@ public class GameListener implements Listener {
     public void onUIClick(InventoryClickEvent e) {
 
         if(e.getCurrentItem()!=null && e.getCurrentItem().getItemMeta()!=null) {
-            String locName = e.getCurrentItem().getItemMeta().getLocalizedName();
+            String locName = UIUtil.getOnclick(e.getCurrentItem());
             e.setCancelled(interactTest((Player) e.getWhoClicked(),locName));
         }
     }
@@ -67,7 +63,7 @@ public class GameListener implements Listener {
         if(e.getAction().equals(Action.RIGHT_CLICK_BLOCK) || e.getAction().equals(Action.RIGHT_CLICK_AIR)) {
             e.getPlayer().getInventory().getItemInMainHand();
             if(e.getPlayer().getInventory().getItemInMainHand().getItemMeta() != null) {
-                String locName = e.getPlayer().getInventory().getItemInMainHand().getItemMeta().getLocalizedName();
+                String locName = UIUtil.getOnclick(e.getPlayer().getInventory().getItemInMainHand());
                 e.setCancelled(interactTest(e.getPlayer(), locName));
             }
         }
@@ -85,7 +81,7 @@ public class GameListener implements Listener {
             } else if(useName.equalsIgnoreCase("profile")) {
                 StatisticsUI.openStatisticsUI(player,minigame);
             } else {
-                player.sendMessage(ChatColor.RED + "ERROR! unidentified localized name: " + locName + " | useName = " + useName);
+                player.sendMessage(ChatColor.RED + "ERROR! unidentified on click name: " + locName + " | useName = " + useName);
             }
 
             return true;

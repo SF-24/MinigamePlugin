@@ -89,7 +89,7 @@ public class PlayerDataSave {
     }
 
 
-    public boolean getKitOwnershipStatus(KitType kitType, Player player) {
+    public boolean getKitOwnershipStatus(String kitType, Player player) {
         return playerJsonDataSave.getKitOwnershipStatus(kitType,player);
     }
 

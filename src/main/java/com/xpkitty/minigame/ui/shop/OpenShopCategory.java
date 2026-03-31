@@ -2,6 +2,7 @@
 
 package com.xpkitty.minigame.ui.shop;
 
+import com.mineshaft.mineshaftapi.util.ui.UIUtil;
 import com.xpkitty.minigame.Minigame;
 import com.xpkitty.minigame.instance.GameType;
 import com.xpkitty.minigame.instance.data.PlayerDataSave;
@@ -14,7 +15,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Locale;
 
@@ -48,9 +48,9 @@ public class OpenShopCategory {
                 assert kitStackMeta != null;
                 kitStackMeta.setDisplayName(kitIconName);
                 kitStackMeta.setLore(kitIconLore);
-                kitStackMeta.setLocalizedName("kits");
                 kitStack.setItemMeta(kitStackMeta);
                 ui.addItem(kitStack);
+                UIUtil.setOnclick(kitStack,"kits");
 
             } else if(string.equalsIgnoreCase("upgrades")) {
                 //TODO: UPGRADES FOR MINIGAMES

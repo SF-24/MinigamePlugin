@@ -149,8 +149,9 @@ public class PVPGame extends Game {
             player.closeInventory();
         }
 
+        // Start for dynamic kit
         for(UUID uuid: arena.getKits().keySet()) {
-            arena.getKits().get(uuid).onStart(Bukkit.getPlayer(uuid));
+            Minigame.getInstance().getKitCache().getKit(arena.getKits().get(uuid)).onStart(Bukkit.getPlayer(uuid));
         }
     }
 

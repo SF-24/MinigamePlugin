@@ -97,11 +97,20 @@ public class ArenaManager {
                 String gameName = config.getString("arenas." + str + ".game");
                 GameType gameType = GameType.valueOf(gameName.toUpperCase(Locale.ROOT));
 
-                arenas.add(new Arena(minigame, Integer.parseInt(str), spawns, beds,
-                        gameType,
-                        config.getBoolean("arenas." + str + ".reset"),
-                        connectListener,
-                        respawn));
+                if(config.contains("arenas."+str+".default-kit")) {
+                    // If a default kit is declared, load it.
+                    arenas.add(new Arena(minigame, Integer.parseInt(str), spawns, beds,
+                            gameType,
+                            config.getBoolean("arenas." + str + ".reset"),
+                            connectListener,
+                            respawn).setDefaultKit(config.getString("arenas." + str + ".default-kit")));
+                } else {
+                    arenas.add(new Arena(minigame, Integer.parseInt(str), spawns, beds,
+                            gameType,
+                            config.getBoolean("arenas." + str + ".reset"),
+                            connectListener,
+                            respawn));
+                }
 
                 System.out.println();
                 System.out.println("Arena " + str + " initialised!");

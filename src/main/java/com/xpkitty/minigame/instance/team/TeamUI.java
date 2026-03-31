@@ -2,6 +2,7 @@
 
 package com.xpkitty.minigame.instance.team;
 
+import com.mineshaft.mineshaftapi.util.ui.UIUtil;
 import com.xpkitty.minigame.Minigame;
 import com.xpkitty.minigame.instance.Arena;
 import com.xpkitty.minigame.instance.GameType;
@@ -14,7 +15,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class TeamUI {
     Minigame minigame;
@@ -44,11 +44,12 @@ public class TeamUI {
                     ItemMeta isMeta = is.getItemMeta();
                     isMeta.setDisplayName(team.getColorCode() + ChatColor.BOLD + team.getName());
                     isMeta.setLore(lore);
-                    isMeta.setLocalizedName(team.name());
                     isMeta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-                    isMeta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+                    isMeta.addItemFlags(ItemFlag.HIDE_ADDITIONAL_TOOLTIP);
                     isMeta.addItemFlags(ItemFlag.HIDE_DYE);
                     is.setItemMeta(isMeta);
+
+                    UIUtil.setOnclick(is,team.name());
 
                     gui.addItem(is);
                 }

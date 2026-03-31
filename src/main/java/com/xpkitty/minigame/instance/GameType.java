@@ -37,6 +37,10 @@ public enum GameType {
         this.statistics=statistics;
     }
 
+    public boolean hasLegacyKits() {
+        return hasKits && this==SHOVELSPLEEF;
+    }
+
     public List<StatisticType> getStatistics() {return statistics;}
     public Material getIcon() {return icon;}
     public GameCategories getCategory() {return category;}

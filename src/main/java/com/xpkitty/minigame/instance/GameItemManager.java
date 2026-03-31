@@ -2,6 +2,7 @@
 
 package com.xpkitty.minigame.instance;
 
+import com.mineshaft.mineshaftapi.util.ui.UIUtil;
 import com.xpkitty.minigame.Minigame;
 import com.xpkitty.minigame.instance.game.bedwars.BedWarsGame;
 import com.xpkitty.minigame.instance.game.bedwars.Tool;
@@ -148,10 +149,10 @@ public class GameItemManager {
             ItemStack item = new ItemStack(Material.FIRE_CHARGE);
             ItemMeta meta = item.getItemMeta();
             assert meta != null;
-            meta.setLocalizedName("FIREBALL");
             meta.setDisplayName(ChatColor.WHITE+"Fireball");
             meta.setLore(Collections.singletonList(ChatColor.GRAY + "Right click while holding to shoot"));
             item.setItemMeta(meta);
+            UIUtil.setOnclick(item,"FIREBALL");
             player.getInventory().addItem(item);
         }
     }

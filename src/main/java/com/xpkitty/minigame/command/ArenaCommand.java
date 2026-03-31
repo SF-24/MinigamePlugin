@@ -6,11 +6,11 @@ import com.xpkitty.minigame.GameState;
 import com.xpkitty.minigame.Minigame;
 import com.xpkitty.minigame.instance.Arena;
 import com.xpkitty.minigame.instance.GameType;
-import com.xpkitty.minigame.instance.game.PVPGame;
 import com.xpkitty.minigame.instance.team.TeamUI;
 import com.xpkitty.minigame.kit.KitUI;
 import com.xpkitty.minigame.ui.GameSelectorUI;
 import com.xpkitty.minigame.ui.MainUI;
+import com.xpkitty.minigame.ui.StatisticsUI;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -28,7 +28,16 @@ public class ArenaCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
-        if(sender instanceof Player){
+
+        if(args.length == 1 && args[0].equalsIgnoreCase("reload")) {
+            if(sender.hasPermission("minigame.admin")) {
+                Minigame.getInstance().reloadConfig();
+                Minigame.getInstance().reload();
+                sender.sendMessage(ChatColor.AQUA + "Config files have been reloaded!");
+            } else {
+                sender.sendMessage(ChatColor.RED + "You have insufficient permissions to run this command!");
+            }
+        } else if(sender instanceof Player){
             Player player = (Player) sender;
 
             if(args.length == 1 && args[0].equalsIgnoreCase("list")) {
@@ -138,8 +147,20 @@ public class ArenaCommand implements CommandExecutor {
                 } else {
                     player.sendMessage(ChatColor.RED + "You cannot run this command while playing in an arena");
                 }
-            } else if(args.length== 1 && args[0].equalsIgnoreCase("ui")) {
-                GameSelectorUI.openMainGameSelectorUI(player,minigame);
+            } else if(args.length == 1 && (args[0].equalsIgnoreCase("profile") || args[0].equalsIgnoreCase("stats")  || args[0].equalsIgnoreCase("statistics"))) {
+                Arena arena = minigame.getArenaManager().getArena(player);
+                if(arena == null || !arena.getState().equals(GameState.LIVE)) {
+                    StatisticsUI.openStatisticsUI(player,minigame);
+                } else {
+                    player.sendMessage(ChatColor.RED + "You cannot run this command while playing in an arena");
+                }
+            } else if(args.length== 1 && (args[0].equalsIgnoreCase("ui")||args[0].equalsIgnoreCase("gui"))) {
+                Arena arena = minigame.getArenaManager().getArena(player);
+                if(arena == null || !arena.getState().equals(GameState.LIVE)) {
+                    GameSelectorUI.openMainGameSelectorUI(player,minigame);
+                } else {
+                    player.sendMessage(ChatColor.RED + "You cannot run this command while playing in an arena");
+                }
             } else {
                 player.sendMessage(ChatColor.RED + "Invalid usage! These are the options:");
                 player.sendMessage(ChatColor.RED + "- /arena list");
@@ -147,8 +168,10 @@ public class ArenaCommand implements CommandExecutor {
                 player.sendMessage(ChatColor.RED + "- /arena join <id>");
                 player.sendMessage(ChatColor.RED + "- /arena kit");
                 player.sendMessage(ChatColor.RED + "- /arena team");
-                player.sendMessage(ChatColor.RED + "- /arena shop");
-                player.sendMessage(ChatColor.RED + "- /arena ui");
+                player.sendMessage(ChatColor.RED + "- /arena menu|shop");
+                player.sendMessage(ChatColor.RED + "- /arena ui|gui");
+                player.sendMessage(ChatColor.RED + "- /arena profile|stats|statistics");
+                player.sendMessage(ChatColor.RED + "- /arena reload");
                 player.sendMessage(ChatColor.RED + "- /lobby");
             }
         }
