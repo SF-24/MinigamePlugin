@@ -1,5 +1,6 @@
 package com.mineshaft.minigame.kit.data_manager;
 
+import com.mineshaft.mineshaftapi.util.Logger;
 import com.mineshaft.minigame.Minigame;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.EquipmentSlot;
@@ -24,47 +25,44 @@ public class YamlKitLoader {
         }
 
         if(folder.listFiles()==null || folder.listFiles().length==0) {
-            createDemoEvent();
+            createDemoKit();
         }
 
         for(File file : Objects.requireNonNull(folder.listFiles())) {
-            initialiseKit(null,file.getName());
+            initialiseKit(file);
         }
     }
 
-    private void initialiseKit(String path, String fileName) {
-        String dir = Minigame.getInstance().getDataFolder() + File.separator + "Kits";
-        if(path!=null&&!path.isEmpty()) {dir+=File.separator+path;}
-        File fileYaml = new File(dir, fileName);
+    private void initialiseKit(File fileYaml) {
         YamlConfiguration yamlConfiguration = YamlConfiguration.loadConfiguration(fileYaml);
 
         HashMap<String, Integer> items = new HashMap<>();
         HashMap<EquipmentSlot, String> equipment = new HashMap<>();
 
-        Map<?,?> itemsRaw = (Map<?, ?>) yamlConfiguration.getMapList("items");
-        for(Map.Entry<?,?> entry : itemsRaw.entrySet()) {
-            items.put(entry.getKey().toString(), Integer.parseInt(entry.getValue().toString()));
+        for(String element : yamlConfiguration.getConfigurationSection("items").getKeys(false)) {
+            items.put(element, yamlConfiguration.getInt("items." + element));
         }
 
-        Map<?,?> equipmentRaw = (Map<?, ?>) yamlConfiguration.getMapList("equipment");
-        for(Map.Entry<?,?> entry : itemsRaw.entrySet()) {
-            switch (entry.getKey().toString()) {
-                case "helmet"-> equipment.put(EquipmentSlot.HEAD,entry.getValue().toString());
-                case "chestplate"-> equipment.put(EquipmentSlot.BODY,entry.getValue().toString());
-                case "leggings"-> equipment.put(EquipmentSlot.LEGS,entry.getValue().toString());
-                case "boots"-> equipment.put(EquipmentSlot.FEET,entry.getValue().toString());
-                case "mainhand"-> equipment.put(EquipmentSlot.HAND,entry.getValue().toString());
-                case "offhand"-> equipment.put(EquipmentSlot.OFF_HAND,entry.getValue().toString());
+        for(String element : yamlConfiguration.getConfigurationSection("equipment").getKeys(false)) {
+            switch (element) {
+                case "helmet"-> equipment.put(EquipmentSlot.HEAD,yamlConfiguration.getString("items." + element));
+                case "chestplate"-> equipment.put(EquipmentSlot.BODY,yamlConfiguration.getString("items." + element));
+                case "leggings"-> equipment.put(EquipmentSlot.LEGS,yamlConfiguration.getString("items." + element));
+                case "boots"-> equipment.put(EquipmentSlot.FEET,yamlConfiguration.getString("items." + element));
+                case "mainhand"-> equipment.put(EquipmentSlot.HAND,yamlConfiguration.getString("items." + element));
+                case "offhand"-> equipment.put(EquipmentSlot.OFF_HAND,yamlConfiguration.getString("items." + element));
             }
         }
 
+        String fileName = fileYaml.getName();
         Minigame.getInstance().getKitCache().cacheKit(
                 fileName.substring(0, fileName.lastIndexOf(".")),
                 new DynamicKit(fileName.substring(0, fileName.lastIndexOf(".")),yamlConfiguration.getInt("cost"),yamlConfiguration.getStringList("games"),yamlConfiguration.getString("icon"),items,equipment)
         );
+        Logger.logInfo("Kit loaded " + fileName);
     }
 
-    private void createDemoEvent() {
+    private void createDemoKit() {
         String dir = Minigame.getInstance().getDataFolder() + File.separator + "Kits";
         File fileYaml = new File(dir, "demo-kit.yml");
         YamlConfiguration yamlConfiguration = YamlConfiguration.loadConfiguration(fileYaml);
@@ -90,6 +88,7 @@ public class YamlKitLoader {
         yamlConfiguration.set("cost",0);
         try {
             yamlConfiguration.save(fileYaml);
+            Logger.logInfo("Created demo kit");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

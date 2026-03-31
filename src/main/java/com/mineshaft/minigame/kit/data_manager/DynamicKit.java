@@ -10,6 +10,7 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -19,7 +20,7 @@ public class DynamicKit {
     private final int cost;
     public HashMap<String, Integer> items;
     public HashMap<EquipmentSlot, String> equipment;
-    public List<String> games;
+    public ArrayList<String> games = new ArrayList<>();
     public String icon;
     String id;
 

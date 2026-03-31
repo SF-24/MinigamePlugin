@@ -31,9 +31,9 @@ public class ArenaCommand implements CommandExecutor {
 
         if(args.length == 1 && args[0].equalsIgnoreCase("reload")) {
             if(sender.hasPermission("minigame.admin")) {
+                sender.sendMessage(ChatColor.AQUA + "Config files have been reloaded!");
                 Minigame.getInstance().reloadConfig();
                 Minigame.getInstance().reload();
-                sender.sendMessage(ChatColor.AQUA + "Config files have been reloaded!");
             } else {
                 sender.sendMessage(ChatColor.RED + "You have insufficient permissions to run this command!");
             }

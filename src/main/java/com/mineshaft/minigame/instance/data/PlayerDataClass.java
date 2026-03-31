@@ -10,7 +10,7 @@ import java.util.HashMap;
 
 public class PlayerDataClass {
 
-    public PlayerDataClass(HashMap<CoinType, Integer> coins, HashMap<KitType, Boolean> kits, HashMap<Integer, PlayerStatistics> statistics) {
+    public PlayerDataClass(HashMap<CoinType, Integer> coins, HashMap<String, Boolean> kits, HashMap<Integer, PlayerStatistics> statistics) {
         this.coins=coins;
         this.kits=kits;
         this.statistics=statistics;
@@ -18,7 +18,7 @@ public class PlayerDataClass {
 
 
     HashMap<CoinType, Integer> coins;
-    HashMap<KitType, Boolean> kits;
+    HashMap<String, Boolean> kits;
     HashMap<Integer, PlayerStatistics> statistics;
 
     public HashMap<Integer, PlayerStatistics> getStatistics() {
@@ -53,9 +53,9 @@ public class PlayerDataClass {
         }
     }
 
-    private void checkContainsKitType(KitType kitType) {
+    private void checkContainsKitType(String kitType, int price) {
         if(!kits.containsKey(kitType) && kitType!=null) {
-            if(kitType.getPrice()<=0) {
+            if(price<=0) {
                 kits.put(kitType, true);
             } else {
                 kits.put(kitType,false);
@@ -63,7 +63,7 @@ public class PlayerDataClass {
         }
     }
 
-    public void giveKit(KitType kitType) {
+    public void giveKit(String kitType) {
         kits.put(kitType, true);
     }
 
@@ -72,8 +72,8 @@ public class PlayerDataClass {
         return coins.get(coinType);
     }
 
-    public boolean getKitStatus(KitType kit) {
-        checkContainsKitType(kit);
+    public boolean getKitStatus(String kit, int price) {
+        checkContainsKitType(kit,price);
         return kits.get(kit);
     }
 

@@ -103,10 +103,14 @@ public class PlayerJsonDataSave {
     public static PlayerDataClass makeEmptyData() {
 
         // add kits
-        HashMap<KitType, Boolean> map = new HashMap<>();
+        HashMap<String, Boolean> map = new HashMap<>();
         for(KitType element : KitType.values()) {
             boolean val = element.getPrice() <= 0;
 
+            map.put(element.name().toLowerCase(), val);
+        }
+        for(String element : Minigame.getInstance().getKitCache().getKits()) {
+            boolean val = Minigame.getInstance().getKitCache().getKit(element).getCost() <= 0;
             map.put(element, val);
         }
 
@@ -183,7 +187,7 @@ public class PlayerJsonDataSave {
         writeData(data, getFile(minigame,player));
     }
 
-    public void giveKit(Player player, KitType kitType) {
+    public void giveKit(Player player, String kitType) {
         PlayerDataClass data = loadData(minigame, player);
         data.giveKit(kitType);
         saveFile(data,player);
@@ -211,12 +215,16 @@ public class PlayerJsonDataSave {
     }
 
 
-    public boolean getKitOwnershipStatus(String kit, Player player) {
+    public boolean getKitOwnershipStatus(String kitName, Player player) {
 
-        String kitName = kit.toLowerCase();
         for(KitType kitType : KitType.values()) {
             if(kitType.name().equalsIgnoreCase(kitName)) {
-                return loadData(minigame, player).getKitStatus(kitType);
+                return loadData(minigame, player).getKitStatus(kitType.name().toLowerCase(),kitType.getPrice());
+            }
+        }
+        for(String kit : Minigame.getInstance().getKitCache().getKits()) {
+            if(kit.equalsIgnoreCase(kitName.toLowerCase())) {
+                return loadData(minigame, player).getKitStatus(kit,Minigame.getInstance().getKitCache().getKit(kit).getCost());
             }
         }
 

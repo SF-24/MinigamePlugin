@@ -119,10 +119,33 @@ public class UIListener implements Listener {
                     if (!playerDataSave.getKitOwnershipStatus(kitType.name(), player)) {
                         if (playerDataSave.getCoins(player, kitType.getGame()) >= kitType.getPrice()) {
 
-                            playerDataSave.playerJsonDataSave.giveKit(player, kitType);
+                            playerDataSave.playerJsonDataSave.giveKit(player, kitType.name());
                             player.sendMessage(ChatColor.GREEN + "Kit purchased: " + kitType.getDisplay());
                             playerDataSave.addPoints(player, kitType.getGame(), -kitType.getPrice());
                             new OpenKitMenu(player, minigame, kitType.getGame());
+
+
+                        } else {
+                            player.sendMessage(ChatColor.RED + "You do not have enough coins");
+                        }
+                    } else {
+                        player.sendMessage(ChatColor.RED + "You already own this kit!");
+                    }
+                }
+            }
+            // Dynamic kits
+            for (String kitType : Minigame.getInstance().getKitCache().getKits()) {
+                if (kitType.equalsIgnoreCase(kitName)) {
+
+                    //TODO: KIT BUYING
+
+                    if (!playerDataSave.getKitOwnershipStatus(kitType, player)) {
+                        if (playerDataSave.getCoins(player, GameType.valueOf(Minigame.getInstance().getKitCache().getKit(kitType).games.get(0).toUpperCase())) >= Minigame.getInstance().getKitCache().getKit(kitType).getCost()) {
+
+                            playerDataSave.playerJsonDataSave.giveKit(player, kitType);
+                            player.sendMessage(ChatColor.GREEN + "Kit purchased: " + TextFormatter.convertStringToName(kitType));
+                            playerDataSave.addPoints(player, GameType.valueOf(Minigame.getInstance().getKitCache().getKit(kitType).games.get(0).toUpperCase()), -Minigame.getInstance().getKitCache().getKit(kitType).getCost());
+                            new OpenKitMenu(player, minigame, GameType.valueOf(Minigame.getInstance().getKitCache().getKit(kitType).games.get(0).toUpperCase()));
 
 
                         } else {

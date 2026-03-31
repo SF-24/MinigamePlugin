@@ -5,7 +5,7 @@ import java.util.Set;
 
 public class YamlKitCache {
 
-    private HashMap<String, DynamicKit> minigameKits;
+    private final HashMap<String, DynamicKit> minigameKits = new HashMap<>();
 
     public DynamicKit getKit(String id) {
         return  minigameKits.get(id);
