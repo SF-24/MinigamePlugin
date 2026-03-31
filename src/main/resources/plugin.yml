@@ -1,8 +1,8 @@
 name: Minigame
 version: '${project.version}'
-main: com.xpkitty.minigame.Minigame
+main: com.mineshaft.minigame.Minigame
 api-version: 1.18
-authors: [ XpKitty ]
+authors: [ SebastianFrynas ]
 description: a minigame plugin
 depend: [MineshaftApi,Multiverse-Core]
 commands:

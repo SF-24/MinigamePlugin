@@ -1,0 +1,112 @@
+// 2023. Author: S.Frynas (XpKitty), e-mail: sebastian.frynas@outlook.com, licence: GNU GPL v3
+
+package com.mineshaft.minigame;
+
+import com.mineshaft.mineshaftapi.util.ui.UIUtil;
+import com.mineshaft.minigame.command.ArenaCommand;
+import com.mineshaft.minigame.command.BWShop;
+import com.mineshaft.minigame.command.LobbyCommand;
+import com.mineshaft.minigame.instance.Arena;
+import com.mineshaft.minigame.kit.data_manager.YamlKitCache;
+import com.mineshaft.minigame.kit.data_manager.YamlKitLoader;
+import com.mineshaft.minigame.listener.*;
+import com.mineshaft.minigame.manager.ArenaManager;
+import com.mineshaft.minigame.manager.ConfigManager;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.Collections;
+
+public class Minigame extends JavaPlugin{
+
+    public static Minigame getInstance() {return Minigame.getPlugin(Minigame.class);};
+
+    private YamlKitCache kitCache;
+    private ArenaManager arenaManager;
+    private YamlKitLoader kitLoader;
+    private final ConfigManager configManager = new ConfigManager();
+
+    @Override
+    public void onEnable(){
+        ConfigManager.setupConfig(this);
+
+        ConnectListener listener = new ConnectListener(this);
+        arenaManager = new ArenaManager(this, listener);
+
+        // Initialise the cache before the loader, which uses the cache.
+        kitCache = new YamlKitCache();
+        kitLoader = new YamlKitLoader();
+
+        Bukkit.getPluginManager().registerEvents(new GameListener(this), this);
+        Bukkit.getPluginManager().registerEvents(new UIListener(this), this);
+        Bukkit.getPluginManager().registerEvents(listener, this);
+        Bukkit.getPluginManager().registerEvents(new ExplodeListener(this), this);
+        Bukkit.getPluginManager().registerEvents(new ClickListener(), this);
+        Bukkit.getPluginManager().registerEvents(new PregameListener(this), this);
+
+        getCommand("arena").setExecutor(new ArenaCommand(this));
+        getCommand("lobby").setExecutor(new LobbyCommand(this));
+        getCommand("shop").setExecutor(new BWShop(this));
+    }
+
+    @Override
+    public void onDisable() {
+        for(Arena arena : arenaManager.getArenas()) {
+            arena.sendTitle(ChatColor.RED + "GAME HAS ENDED", ChatColor.GOLD + "PLUGIN DISABLED");
+        }
+    }
+
+    public void reload() {
+        kitCache.clearCache();
+        kitLoader.initialiseFiles();
+    }
+
+    public static void sendCoinsMessage(Player player, int amount) {
+        player.sendMessage(ChatColor.GOLD + "+" + amount + " coins");
+    }
+
+    public static void giveLobbyItems(Player player) {
+        ItemStack compass = new ItemStack(Material.COMPASS);
+        ItemMeta compassMeta = compass.getItemMeta();
+        assert compassMeta != null;
+        compassMeta.setDisplayName(ChatColor.WHITE + "Game Selector");
+        compassMeta.setLore(Collections.singletonList(ChatColor.GRAY + "Right click when in hand to open game selection"));
+        compass.setItemMeta(compassMeta);
+        UIUtil.setOnclick(compass, "lobby_game_selector");
+
+        ItemStack shop = new ItemStack(Material.EMERALD);
+        ItemMeta shopMeta = shop.getItemMeta();
+        assert shopMeta != null;
+        shopMeta.setDisplayName(ChatColor.WHITE + "Shop");
+        shopMeta.setLore(Collections.singletonList(ChatColor.GRAY + "Right click when in hand to open shop"));
+        shop.setItemMeta(shopMeta);
+        UIUtil.setOnclick(shop, "lobby_shop");
+
+        ItemStack profile = new ItemStack(Material.PLAYER_HEAD);
+        SkullMeta profileMeta = (SkullMeta) profile.getItemMeta();
+        assert profileMeta != null;
+        profileMeta.setOwningPlayer(player);
+        profileMeta.setDisplayName(ChatColor.WHITE + "Profile");
+        profileMeta.setLore(Collections.singletonList(ChatColor.GRAY + "Right click when in hand to open profile"));
+        profile.setItemMeta(profileMeta);
+        UIUtil.setOnclick(profile, "lobby_profile");
+
+        if(ConfigManager.getClearInventoryOnJoin()) {
+            player.getInventory().clear();
+        }
+        player.getInventory().setItem(0,compass);
+        player.getInventory().setItem(4,shop);
+        player.getInventory().setItem(8,profile);
+    }
+
+    public ConfigManager getConfigManager() {return configManager; }
+    public ArenaManager getArenaManager() { return arenaManager; }
+    public YamlKitLoader getKitLoader() { return kitLoader; }
+    public YamlKitCache getKitCache() { return kitCache;}
+}

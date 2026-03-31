@@ -1,10 +1,10 @@
 // 2023. Author: S.Frynas (XpKitty), e-mail: sebastian.frynas@outlook.com, licence: GNU GPL v3
 
-package com.xpkitty.minigame.kit.type;
+package com.mineshaft.minigame.kit.type;
 
-import com.xpkitty.minigame.Minigame;
-import com.xpkitty.minigame.kit.Kit;
-import com.xpkitty.minigame.kit.KitType;
+import com.mineshaft.minigame.Minigame;
+import com.mineshaft.minigame.kit.Kit;
+import com.mineshaft.minigame.kit.KitType;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Material;

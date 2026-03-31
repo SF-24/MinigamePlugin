@@ -1,0 +1,76 @@
+// 2023. Author: S.Frynas (XpKitty), e-mail: sebastian.frynas@outlook.com, licence: GNU GPL v3
+
+package com.mineshaft.minigame.listener;
+
+import com.mineshaft.minigame.Minigame;
+import com.mineshaft.minigame.instance.Arena;
+import com.mineshaft.minigame.instance.GameType;
+import com.mineshaft.minigame.instance.data.PlayerDataSave;
+import com.mineshaft.minigame.manager.ConfigManager;
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+
+import java.util.HashMap;
+import java.util.UUID;
+
+public class ConnectListener implements Listener {
+
+    private final HashMap<UUID, PlayerDataSave> dataSaveList = new HashMap<>();
+    public Minigame minigame;
+
+    public ConnectListener(Minigame minigame){
+        this.minigame = minigame;
+    }
+
+    @EventHandler
+    public void onJoin(PlayerJoinEvent e){
+
+        Player player = e.getPlayer();
+
+        if(!ConfigManager.getDisabledWorlds().contains(player.getWorld().getName())) {
+            if(ConfigManager.getSendWelcomeMessage()) {
+                player.sendMessage(ChatColor.GREEN + ConfigManager.getWelcomeMessage());
+            }
+            if(ConfigManager.getTeleportToLobbyOnJoin()) {
+                player.teleport(ConfigManager.getLobbySpawn());
+            }
+            if(ConfigManager.getGiveLobbyCompassOnJoin()) {
+                Minigame.giveLobbyItems(player);
+            }
+        }
+        PlayerDataSave instance = new PlayerDataSave(player, minigame);
+
+        if(!dataSaveList.containsKey(player.getUniqueId())) {
+            dataSaveList.put(player.getUniqueId(), instance);
+            System.out.println("adding key to HashMap");
+        }
+        instance.addPoints(player, GameType.PVP, 0);
+    }
+
+    @EventHandler
+    public void onQuit(PlayerQuitEvent e){
+        Player player = e.getPlayer();
+
+        Arena arena = minigame.getArenaManager().getArena(player);
+        if(arena != null) {
+            arena.removePlayer(player);
+        }
+        dataSaveList.remove(player.getUniqueId());
+
+    }
+
+    public HashMap<UUID, PlayerDataSave> getDataSaveList() { return dataSaveList; }
+    public PlayerDataSave getPlayerData(Player player) {
+        if(dataSaveList.containsKey(player.getUniqueId())) {
+            return(dataSaveList.get(player.getUniqueId()));
+        }
+
+        return null;
+    }
+
+    private void initiateFile() {}
+}
